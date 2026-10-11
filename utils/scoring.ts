@@ -8,10 +8,6 @@ export interface ScoreDetails {
   badgeColor: string;
 }
 
-/**
- * Menghitung skor kuis berdasarkan formula PRD:
- * (Jawaban Benar / Total Soal) * 100
- */
 export function calculateScore(correctAnswers: number, totalQuestions: number): ScoreDetails {
   const safeTotal = totalQuestions > 0 ? totalQuestions : 1;
   const percentage = Math.round((correctAnswers / safeTotal) * 100);
@@ -19,7 +15,7 @@ export function calculateScore(correctAnswers: number, totalQuestions: number): 
 
   let evaluationMessage = '';
   let gradeLabel = '';
-  let badgeColor = '#059669'; // Teal / emerald
+  let badgeColor = '#059669';
 
   if (percentage >= 85) {
     gradeLabel = 'Sangat Baik';
@@ -50,9 +46,6 @@ export function calculateScore(correctAnswers: number, totalQuestions: number): 
   };
 }
 
-/**
- * Format tanggal pengerjaan kuis ke bahasa Indonesia
- */
 export function formatQuizDate(date: Date = new Date()): string {
   const options: Intl.DateTimeFormatOptions = {
     day: 'numeric',
@@ -64,9 +57,6 @@ export function formatQuizDate(date: Date = new Date()): string {
   return date.toLocaleDateString('id-ID', options);
 }
 
-/**
- * ID hasil tes kuis MindoraIQ
- */
 export function generateResultId(): string {
   const dateStr = Date.now().toString(36).toUpperCase();
   const randNum = Math.floor(Math.random() * 900 + 100);

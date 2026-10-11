@@ -3,9 +3,9 @@ export interface Question {
   category: string;
   question: string;
   options: string[];
-  correctAnswer: number; // Indeks jawaban benar (0-based)
+  correctAnswer: number;
   explanation?: string;
-  imageVisual?: string; // Tampilan diagram/visual teks untuk pola gambar
+  imageVisual?: string;
 }
 
 export interface QuizResult {

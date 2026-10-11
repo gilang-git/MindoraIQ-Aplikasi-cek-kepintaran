@@ -41,7 +41,6 @@ export default function CategoryScreen() {
         </Text>
       </View>
 
-      {/* Comprehensive Test Option */}
       <Pressable style={styles.allBox} onPress={handleSelectAll}>
         <View style={styles.allHeader}>
           <View style={styles.allTag}>
@@ -67,7 +66,6 @@ export default function CategoryScreen() {
         <View style={styles.line} />
       </View>
 
-      {/* Category List */}
       <View style={styles.categoryStack}>
         {CATEGORIES.map((cat) => (
           <Pressable

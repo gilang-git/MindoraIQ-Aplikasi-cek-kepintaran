@@ -7,7 +7,7 @@ export const CATEGORIES: CategoryItem[] = [
     description: 'Uji kemampuan deduksi, silogisme, dan analisis premis berpikir.',
     icon: 'bulb-outline',
     questionCount: 5,
-    accentColor: '#3B82F6', // Blue
+    accentColor: '#3B82F6',
   },
   {
     id: 'pola-angka',
@@ -15,7 +15,7 @@ export const CATEGORIES: CategoryItem[] = [
     description: 'Analisis deret bilangan, ritme aritmatika, dan pola matematika.',
     icon: 'calculator-outline',
     questionCount: 5,
-    accentColor: '#10B981', // Emerald
+    accentColor: '#10B981',
   },
   {
     id: 'penalaran-verbal',
@@ -23,7 +23,7 @@ export const CATEGORIES: CategoryItem[] = [
     description: 'Ketahui daya nalar analogi kata, hubungan semantik, dan bahasa.',
     icon: 'chatbubbles-outline',
     questionCount: 5,
-    accentColor: '#8B5CF6', // Purple
+    accentColor: '#8B5CF6',
   },
   {
     id: 'pola-gambar',
@@ -31,12 +31,11 @@ export const CATEGORIES: CategoryItem[] = [
     description: 'Uji persepsi spasial, rotasi bangun, dan kesinambungan bentuk visual.',
     icon: 'shapes-outline',
     questionCount: 5,
-    accentColor: '#F59E0B', // Amber
+    accentColor: '#F59E0B',
   },
 ];
 
 export const QUESTIONS_DATA: Question[] = [
-  // ===================== KATEGORI: LOGIKA =====================
   {
     id: 1,
     category: 'logika',
@@ -103,7 +102,6 @@ export const QUESTIONS_DATA: Question[] = [
     explanation: 'Karena syarat masuk ruang server harus berkartu identitas, keberadaan Rian di sana memastikan ia memiliki kartu identitas staf.'
   },
 
-  // ===================== KATEGORI: POLA ANGKA =====================
   {
     id: 6,
     category: 'pola-angka',
@@ -170,7 +168,6 @@ export const QUESTIONS_DATA: Question[] = [
     explanation: 'Pola selisih bertingkat: -5, -10, -15, -20, maka langkah selanjutnya -25. 50 - 25 = 25.'
   },
 
-  // ===================== KATEGORI: PENALARAN VERBAL =====================
   {
     id: 11,
     category: 'penalaran-verbal',
@@ -237,7 +234,6 @@ export const QUESTIONS_DATA: Question[] = [
     explanation: 'Rasa haus dihilangkan dengan air, rasa lapar dihilangkan dengan nasi (makanan pokok).'
   },
 
-  // ===================== KATEGORI: POLA GAMBAR =====================
   {
     id: 16,
     category: 'pola-gambar',

@@ -44,7 +44,6 @@ export default function HistoryDetailScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* Kartu Ringkasan Hasil */}
       <View style={styles.mainCard}>
         <View style={styles.cardTopBar}>
           <Text style={styles.idChipText}>{result.id}</Text>
@@ -80,7 +79,6 @@ export default function HistoryDetailScreen() {
         </View>
       </View>
 
-      {/* Rincian Performa */}
       <View style={styles.statDetailCard}>
         <Text style={styles.sectionHeader}>Rangkuman Performa</Text>
 
@@ -115,7 +113,6 @@ export default function HistoryDetailScreen() {
         </View>
       </View>
 
-      {/* Tombol Aksi */}
       <View style={styles.btnGroup}>
         <PrimaryButton
           title="Kerjakan Kuis Lagi"
@@ -131,7 +128,6 @@ export default function HistoryDetailScreen() {
         />
       </View>
 
-      {/* Disclaimer */}
       <View style={styles.disclaimerBox}>
         <Text style={styles.disclaimerText}>{MINDORAIQ_DISCLAIMER}</Text>
       </View>

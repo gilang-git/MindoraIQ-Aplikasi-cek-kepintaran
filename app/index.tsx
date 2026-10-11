@@ -20,7 +20,6 @@ export default function HomeScreen() {
   const router = useRouter();
   const { userName, setUserName, history } = useQuiz();
 
-  // Input nama pengguna (penerapan TextInput & useState sesuai modul)
   const [tempName, setTempName] = useState<string>(userName || 'Gilang');
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -41,7 +40,6 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollArea}
         showsVerticalScrollIndicator={false}
       >
-        {/* TOP BRAND HEADER */}
         <View style={styles.headerCard}>
           <View style={styles.brandRow}>
             <View style={styles.logoMark}>
@@ -53,7 +51,6 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          {/* Student Profile Card (TextInput Sesuai Modul) */}
           <View style={styles.studentCard}>
             <Text style={styles.studentLabel}>Nama Peserta / Mahasiswa</Text>
             {isEditing ? (
@@ -86,7 +83,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* STATS OVERVIEW */}
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
             <Text style={styles.statNum}>{CATEGORIES.length}</Text>
@@ -102,7 +98,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* PRIMARY ACTIONS */}
         <View style={styles.actionBlock}>
           <PrimaryButton
             title="Mulai Pengerjaan Tes"
@@ -119,7 +114,6 @@ export default function HomeScreen() {
           />
         </View>
 
-        {/* CATEGORY PREVIEW LIST */}
         <View style={styles.sectionWrap}>
           <View style={styles.sectionTop}>
             <Text style={styles.sectionHeader}>Daftar Kategori Soal</Text>
@@ -149,13 +143,11 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* DISCLAIMER / PROJECT NOTE */}
         <View style={styles.footerNote}>
           <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
           <Text style={styles.footerNoteText}>{MINDORAIQ_DISCLAIMER}</Text>
         </View>
 
-        {/* AUTHOR CREDIT FOOTER */}
         <View style={styles.authorFooter}>
           <Text style={styles.authorText}>MindoraIQ • Tugas Praktikum Pemrograman Mobile</Text>
         </View>

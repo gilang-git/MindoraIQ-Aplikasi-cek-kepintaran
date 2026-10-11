@@ -48,7 +48,6 @@ export default function ResultScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* SCORECARD UTAMA */}
       <View style={styles.scoreCard}>
         <View style={styles.categoryBadge}>
           <Text style={styles.categoryBadgeText}>{result.category}</Text>
@@ -72,7 +71,6 @@ export default function ResultScreen() {
         <Text style={styles.evaluationParagraph}>{scoreDetails.evaluationMessage}</Text>
       </View>
 
-      {/* RINCIAN ANGKA */}
       <View style={styles.detailCard}>
         <Text style={styles.detailTitle}>Rincian Jawaban</Text>
 
@@ -107,7 +105,6 @@ export default function ResultScreen() {
         </View>
       </View>
 
-      {/* BUTTONS */}
       <View style={styles.actionGroup}>
         <PrimaryButton
           title="Ulangi Tes Kategori Ini"
@@ -127,7 +124,6 @@ export default function ResultScreen() {
         />
       </View>
 
-      {/* DISCLAIMER */}
       <View style={styles.disclaimerBox}>
         <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
         <Text style={styles.disclaimerText}>{MINDORAIQ_DISCLAIMER}</Text>
