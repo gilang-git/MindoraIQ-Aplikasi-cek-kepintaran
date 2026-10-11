@@ -29,11 +29,11 @@ export default function HistoryScreen() {
   const handleClearHistory = () => {
     Alert.alert(
       'Hapus Riwayat',
-      'Apakah Anda yakin ingin menghapus seluruh riwayat pengerjaan tes?',
+      'Hapus semua catatan pengerjaan kuis pada sesi ini?',
       [
         { text: 'Batal', style: 'cancel' },
         {
-          text: 'Hapus Semua',
+          text: 'Hapus',
           style: 'destructive',
           onPress: () => clearHistory(),
         },
@@ -50,9 +50,7 @@ export default function HistoryScreen() {
         onPress={() => handleOpenDetail(item.id)}
       >
         <View style={styles.cardHeaderRow}>
-          <View style={styles.idBadge}>
-            <Text style={styles.idText}>{item.id}</Text>
-          </View>
+          <Text style={styles.idText}>{item.id}</Text>
           <Text style={styles.dateText}>{item.date}</Text>
         </View>
 
@@ -79,27 +77,15 @@ export default function HistoryScreen() {
 
           <View style={styles.metricItem}>
             <Text style={styles.metricLabel}>Predikat</Text>
-            <View
-              style={[
-                styles.gradeTag,
-                { backgroundColor: scoreDetails.badgeColor + '18' },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.gradeTagText,
-                  { color: scoreDetails.badgeColor },
-                ]}
-              >
-                {scoreDetails.gradeLabel}
-              </Text>
-            </View>
+            <Text style={[styles.gradeLabel, { color: scoreDetails.badgeColor }]}>
+              {scoreDetails.gradeLabel}
+            </Text>
           </View>
         </View>
 
         <View style={styles.cardFooter}>
-          <Text style={styles.footerHint}>Ketuk untuk melihat detail hasil</Text>
-          <Ionicons name="chevron-forward" size={16} color={colors.primaryLight} />
+          <Text style={styles.footerHint}>Lihat detail jawaban</Text>
+          <Ionicons name="chevron-forward" size={15} color={colors.primary} />
         </View>
       </Pressable>
     );
@@ -119,7 +105,7 @@ export default function HistoryScreen() {
               <View>
                 <Text style={styles.title}>Riwayat Pengerjaan</Text>
                 <Text style={styles.subtitle}>
-                  Total {history.length} tes telah diselesaikan pada sesi ini
+                  Tersimpan {history.length} sesi tes
                 </Text>
               </View>
               <Pressable style={styles.clearBtn} onPress={handleClearHistory}>
@@ -131,15 +117,15 @@ export default function HistoryScreen() {
       ) : (
         <View style={styles.emptyContainer}>
           <View style={styles.emptyIconCircle}>
-            <Ionicons name="document-text-outline" size={48} color={colors.textMuted} />
+            <Ionicons name="newspaper-outline" size={36} color={colors.textMuted} />
           </View>
-          <Text style={styles.emptyTitle}>Belum Ada Riwayat Tes</Text>
+          <Text style={styles.emptyTitle}>Belum Ada Riwayat</Text>
           <Text style={styles.emptyDesc}>
-            Hasil kuis yang telah Anda kerjakan akan otomatis tercatat dan dapat dilihat kembali di sini.
+            Hasil pengerjaan kuis Anda akan otomatis dicatat di sini.
           </Text>
           <PrimaryButton
-            title="Mulai Tes Pertama Anda"
-            icon="play-circle-outline"
+            title="Mulai Kuis Pertama"
+            icon="play"
             onPress={() => router.push('/category')}
             style={styles.emptyStartBtn}
           />
@@ -155,113 +141,97 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   listContent: {
-    padding: 20,
+    padding: 18,
     paddingBottom: 40,
   },
   headerRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 14,
   },
   title: {
-    fontSize: 20,
-    fontWeight: '800',
+    fontSize: 18,
+    fontWeight: '700',
     color: colors.textPrimary,
   },
   subtitle: {
-    fontSize: 13,
+    fontSize: 12,
     color: colors.textSecondary,
     marginTop: 2,
   },
   clearBtn: {
-    width: 38,
-    height: 38,
-    borderRadius: 10,
-    backgroundColor: colors.dangerLight,
+    width: 36,
+    height: 36,
+    borderRadius: 8,
+    backgroundColor: colors.dangerSoft,
     justifyContent: 'center',
     alignItems: 'center',
   },
   cardItem: {
-    backgroundColor: colors.card,
-    borderRadius: 18,
+    backgroundColor: colors.surface,
+    borderRadius: 12,
     padding: 16,
     borderWidth: 1,
     borderColor: colors.border,
-    marginBottom: 14,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 6,
-    elevation: 2,
+    marginBottom: 12,
   },
   cardHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 8,
-  },
-  idBadge: {
-    backgroundColor: colors.cardAlt,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    marginBottom: 6,
   },
   idText: {
     fontSize: 11,
-    fontWeight: '700',
-    color: colors.textSecondary,
+    fontWeight: '600',
+    color: colors.textMuted,
   },
   dateText: {
-    fontSize: 12,
+    fontSize: 11,
     color: colors.textSecondary,
   },
   categoryTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 12,
+    marginBottom: 10,
   },
   metricsRow: {
     flexDirection: 'row',
-    backgroundColor: colors.cardAlt,
-    borderRadius: 12,
-    padding: 12,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: 8,
+    paddingVertical: 10,
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   metricItem: {
     alignItems: 'center',
     flex: 1,
   },
   metricLabel: {
-    fontSize: 11,
-    color: colors.textSecondary,
-    marginBottom: 4,
-    fontWeight: '500',
+    fontSize: 10,
+    color: colors.textMuted,
+    marginBottom: 2,
+    textTransform: 'uppercase',
   },
   percentageValue: {
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 16,
+    fontWeight: '700',
   },
   metricValue: {
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '600',
     color: colors.textPrimary,
   },
   metricDivider: {
     width: 1,
-    height: 24,
+    height: 20,
     backgroundColor: colors.border,
   },
-  gradeTag: {
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 6,
-  },
-  gradeTagText: {
-    fontSize: 11,
+  gradeLabel: {
+    fontSize: 12,
     fontWeight: '700',
   },
   cardFooter: {
@@ -274,8 +244,8 @@ const styles = StyleSheet.create({
   },
   footerHint: {
     fontSize: 12,
-    color: colors.primaryLight,
-    fontWeight: '600',
+    color: colors.primary,
+    fontWeight: '500',
   },
   emptyContainer: {
     flex: 1,
@@ -284,26 +254,26 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   emptyIconCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    backgroundColor: colors.cardAlt,
+    width: 64,
+    height: 64,
+    borderRadius: 12,
+    backgroundColor: colors.surfaceAlt,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   emptyTitle: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 6,
+    marginBottom: 4,
   },
   emptyDesc: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 20,
-    marginBottom: 20,
+    lineHeight: 18,
+    marginBottom: 18,
   },
   emptyStartBtn: {
     width: '100%',

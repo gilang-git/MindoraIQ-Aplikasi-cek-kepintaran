@@ -13,12 +13,12 @@ export default function RootLayout() {
         <Stack
           screenOptions={{
             headerStyle: {
-              backgroundColor: colors.primaryDark,
+              backgroundColor: colors.dark,
             },
-            headerTintColor: colors.textWhite,
+            headerTintColor: colors.textInverse,
             headerTitleStyle: {
               fontWeight: '700',
-              fontSize: 18,
+              fontSize: 17,
             },
             headerShadowVisible: false,
             contentStyle: {
@@ -29,15 +29,15 @@ export default function RootLayout() {
           <Stack.Screen
             name="index"
             options={{
-              title: 'IQSmart',
-              headerShown: false, // Custom header on homepage
+              title: 'MindoraIQ',
+              headerShown: false,
             }}
           />
           <Stack.Screen
             name="category"
             options={{
-              title: 'Pilih Kategori',
-              headerBackTitle: 'Kembali',
+              title: 'Pilihan Kategori',
+              headerBackTitle: 'Beranda',
             }}
           />
           <Stack.Screen
@@ -45,27 +45,27 @@ export default function RootLayout() {
             options={{
               title: 'Pengerjaan Kuis',
               headerBackTitle: 'Keluar',
-              gestureEnabled: false, // Cegah swipe-back tidak sengaja saat kuis
+              gestureEnabled: false,
             }}
           />
           <Stack.Screen
             name="result"
             options={{
-              title: 'Hasil Tes Kognitif',
-              headerBackVisible: false, // Tidak bisa back langsung tanpa aksi tombol
+              title: 'Hasil Evaluasi',
+              headerBackVisible: false,
             }}
           />
           <Stack.Screen
             name="history"
             options={{
-              title: 'Riwayat Tes',
+              title: 'Riwayat Kuis',
               headerBackTitle: 'Beranda',
             }}
           />
           <Stack.Screen
             name="history/[id]"
             options={{
-              title: 'Detail Hasil',
+              title: 'Rincian Hasil',
               headerBackTitle: 'Riwayat',
             }}
           />

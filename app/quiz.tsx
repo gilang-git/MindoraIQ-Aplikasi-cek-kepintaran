@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,14 +25,12 @@ export default function QuizScreen() {
   const params = useLocalSearchParams<{ category?: string }>();
   const { addResult, userName } = useQuiz();
 
-  // State kuis sesuai materi Modul 2
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [validationWarning, setValidationWarning] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  // Inisialisasi daftar soal berdasarkan kategori dengan useEffect
   useEffect(() => {
     let filtered: Question[] = [];
     const targetCategory = params.category;
@@ -50,7 +47,6 @@ export default function QuizScreen() {
 
     setQuestions(filtered);
     setCurrentIndex(0);
-    // Inisialisasi array jawaban kosong (null) untuk setiap soal
     setUserAnswers(new Array(filtered.length).fill(null));
     setValidationWarning(null);
   }, [params.category]);
@@ -58,7 +54,7 @@ export default function QuizScreen() {
   if (questions.length === 0) {
     return (
       <View style={styles.centerContainer}>
-        <Text style={styles.loadingText}>Menyiapkan paket soal...</Text>
+        <Text style={styles.loadingText}>Memuat butir soal...</Text>
       </View>
     );
   }
@@ -67,28 +63,24 @@ export default function QuizScreen() {
   const selectedOption = userAnswers[currentIndex];
   const isLastQuestion = currentIndex === questions.length - 1;
 
-  // Nama kategori saat ini untuk tampilan badge
   const categoryInfo = CATEGORIES.find((c) => c.id === currentQuestion.category);
   const currentCategoryLabel =
     params.category === 'all'
-      ? `Campuran (${categoryInfo?.name || 'Kognitif'})`
-      : categoryInfo?.name || 'Logika & Kognitif';
+      ? `Campuran: ${categoryInfo?.name || 'Kognitif'}`
+      : categoryInfo?.name || 'Tes Kognitif';
 
-  // Handler memilih jawaban untuk soal saat ini (Aturan bisnis 2 & 3)
   const handleSelectOption = (index: number) => {
     const updated = [...userAnswers];
     updated[currentIndex] = index;
     setUserAnswers(updated);
-    // Bersihkan peringatan validasi jika ada
     if (validationWarning) {
       setValidationWarning(null);
     }
   };
 
-  // Handler lanjut ke soal berikutnya (Aturan bisnis 7: validasi jawaban)
   const handleNext = () => {
     if (selectedOption === null || selectedOption === undefined) {
-      setValidationWarning('Harap pilih salah satu jawaban sebelum melanjutkan!');
+      setValidationWarning('Pilih salah satu jawaban terlebih dahulu sebelum lanjut.');
       return;
     }
 
@@ -98,7 +90,6 @@ export default function QuizScreen() {
     }
   };
 
-  // Handler kembali ke soal sebelumnya (jawaban tersimpan)
   const handlePrevious = () => {
     setValidationWarning(null);
     if (currentIndex > 0) {
@@ -106,17 +97,15 @@ export default function QuizScreen() {
     }
   };
 
-  // Handler menyelesaikan tes (PRD 7.3 & 7.4 & 11)
   const handleFinishQuiz = async () => {
     if (selectedOption === null || selectedOption === undefined) {
-      setValidationWarning('Harap pilih salah satu jawaban sebelum menyelesaikan tes!');
+      setValidationWarning('Pilih salah satu jawaban terlebih dahulu sebelum menyelesaikan tes.');
       return;
     }
 
     setIsSubmitting(true);
     setValidationWarning(null);
 
-    // Hitung skor berdasarkan jawaban benar
     let correctCount = 0;
     questions.forEach((q, idx) => {
       if (userAnswers[idx] === q.correctAnswer) {
@@ -129,7 +118,7 @@ export default function QuizScreen() {
 
     const categoryTitle =
       params.category === 'all'
-        ? 'Simulasi Lengkap (Semua Kategori)'
+        ? 'Simulasi Lengkap (Semua Materi)'
         : categoryInfo?.name || 'Tes Kognitif';
 
     const resultData: QuizResult = {
@@ -139,14 +128,12 @@ export default function QuizScreen() {
       correctAnswers: correctCount,
       percentage: scoreDetails.percentage,
       date: formatQuizDate(),
-      userName: userName || 'Mahasiswa',
+      userName: userName || 'Gilang',
       evaluation: scoreDetails.evaluationMessage,
     };
 
-    // Simpan ke riwayat aplikasi
     await addResult(resultData);
 
-    // Beralih ke halaman hasil dengan replace() agar tidak bisa back ke tengah kuis
     router.replace({
       pathname: '/result',
       params: { id: newResultId },
@@ -159,22 +146,19 @@ export default function QuizScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* Progress Bar & Indikator Soal */}
       <ProgressBar
         current={currentIndex + 1}
         total={questions.length}
         categoryName={currentCategoryLabel}
       />
 
-      {/* Warning Box jika pengguna mencoba lewat tanpa memilih jawaban */}
       {validationWarning ? (
         <View style={styles.warningBox}>
-          <Ionicons name="alert-circle" size={20} color={colors.danger} />
+          <Ionicons name="alert-circle-outline" size={18} color={colors.danger} />
           <Text style={styles.warningText}>{validationWarning}</Text>
         </View>
       ) : null}
 
-      {/* Kartu Soal & Pilihan Jawaban */}
       <QuestionCard
         question={currentQuestion}
         selectedOption={selectedOption}
@@ -182,7 +166,6 @@ export default function QuizScreen() {
         questionNumber={currentIndex + 1}
       />
 
-      {/* Tombol Navigasi Bawah */}
       <View style={styles.bottomNav}>
         {currentIndex > 0 ? (
           <PrimaryButton
@@ -205,7 +188,7 @@ export default function QuizScreen() {
           />
         ) : (
           <PrimaryButton
-            title="Berikutnya"
+            title="Soal Berikutnya"
             icon="arrow-forward"
             onPress={handleNext}
             style={styles.nextBtn}
@@ -222,7 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    padding: 18,
     paddingBottom: 40,
   },
   centerContainer: {
@@ -232,39 +215,37 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   loadingText: {
-    fontSize: 16,
+    fontSize: 15,
     color: colors.textSecondary,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   warningBox: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: colors.dangerLight,
-    borderColor: '#FCA5A5',
+    backgroundColor: colors.dangerSoft,
+    borderColor: '#FECACA',
     borderWidth: 1,
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 14,
+    borderRadius: 8,
+    padding: 10,
+    marginBottom: 12,
   },
   warningText: {
     flex: 1,
     color: colors.danger,
     fontSize: 13,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   bottomNav: {
     flexDirection: 'row',
-    gap: 12,
-    marginTop: 20,
+    gap: 10,
+    marginTop: 18,
   },
   prevBtn: {
     flex: 1,
-    height: 48,
-    borderColor: colors.border,
+    backgroundColor: colors.surface,
   },
   nextBtn: {
     flex: 2,
-    height: 48,
   },
 });

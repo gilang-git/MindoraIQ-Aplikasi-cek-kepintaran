@@ -8,7 +8,7 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuiz } from '../context/QuizContext';
-import { calculateScore, IQSMART_DISCLAIMER } from '../utils/scoring';
+import { calculateScore, MINDORAIQ_DISCLAIMER } from '../utils/scoring';
 import PrimaryButton from '../components/PrimaryButton';
 import { colors } from '../styles';
 
@@ -17,7 +17,6 @@ export default function ResultScreen() {
   const params = useLocalSearchParams<{ id?: string }>();
   const { getResultById, history } = useQuiz();
 
-  // Ambil data hasil tes berdasarkan ID dari param atau hasil paling akhir
   const result = useMemo(() => {
     if (params.id) {
       const found = getResultById(params.id);
@@ -29,9 +28,9 @@ export default function ResultScreen() {
   if (!result) {
     return (
       <View style={styles.centerContainer}>
-        <Ionicons name="alert-circle-outline" size={48} color={colors.textMuted} />
+        <Ionicons name="document-text-outline" size={44} color={colors.textMuted} />
         <Text style={styles.notFoundTitle}>Hasil Tidak Ditemukan</Text>
-        <Text style={styles.notFoundDesc}>Belum ada data pengerjaan tes yang tercatat.</Text>
+        <Text style={styles.notFoundDesc}>Belum ada data pengerjaan tes yang terekam pada sesi ini.</Text>
         <PrimaryButton
           title="Kembali ke Beranda"
           onPress={() => router.replace('/')}
@@ -43,120 +42,95 @@ export default function ResultScreen() {
 
   const scoreDetails = calculateScore(result.correctAnswers, result.totalQuestions);
 
-  const handleRetake = () => {
-    // Arahkan ke pemilihan kategori
-    router.replace('/category');
-  };
-
-  const handleGoHome = () => {
-    router.replace('/');
-  };
-
-  const handleGoHistory = () => {
-    router.push('/history');
-  };
-
   return (
     <ScrollView
       style={styles.container}
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* KARTU SKOR UTAMA */}
-      <View style={styles.scoreHeroCard}>
+      {/* SCORECARD UTAMA */}
+      <View style={styles.scoreCard}>
         <View style={styles.categoryBadge}>
           <Text style={styles.categoryBadgeText}>{result.category}</Text>
         </View>
 
-        <View style={styles.circleScoreWrapper}>
-          <View style={[styles.circleScore, { borderColor: scoreDetails.badgeColor }]}>
-            <Text style={styles.percentageText}>{result.percentage}%</Text>
-            <Text style={styles.percentageSub}>Akurasi</Text>
+        <View style={styles.scoreRow}>
+          <View style={[styles.percentageCircle, { borderColor: scoreDetails.badgeColor }]}>
+            <Text style={[styles.percentageNumber, { color: colors.textPrimary }]}>
+              {result.percentage}%
+            </Text>
+            <Text style={styles.percentageSub}>Skor Akurasi</Text>
           </View>
         </View>
 
-        <View style={[styles.gradeBadge, { backgroundColor: scoreDetails.badgeColor + '20' }]}>
-          <Text style={[styles.gradeText, { color: scoreDetails.badgeColor }]}>
-            {scoreDetails.gradeLabel}
+        <View style={[styles.gradeTag, { backgroundColor: scoreDetails.badgeColor + '15' }]}>
+          <Text style={[styles.gradeTagText, { color: scoreDetails.badgeColor }]}>
+            Predikat: {scoreDetails.gradeLabel}
           </Text>
         </View>
 
-        <Text style={styles.evalMessage}>{scoreDetails.evaluationMessage}</Text>
+        <Text style={styles.evaluationParagraph}>{scoreDetails.evaluationMessage}</Text>
       </View>
 
-      {/* RINCIAN STATISTIK JAWABAN */}
-      <View style={styles.breakdownCard}>
-        <Text style={styles.breakdownTitle}>Rincian Pengerjaan</Text>
+      {/* RINCIAN ANGKA */}
+      <View style={styles.detailCard}>
+        <Text style={styles.detailTitle}>Rincian Jawaban</Text>
 
-        <View style={styles.statsRow}>
-          <View style={styles.statCol}>
-            <View style={[styles.statIcon, { backgroundColor: colors.successLight }]}>
-              <Ionicons name="checkmark-circle" size={24} color={colors.success} />
-            </View>
-            <Text style={styles.statValue}>{result.correctAnswers}</Text>
-            <Text style={styles.statLabel}>Benar</Text>
+        <View style={styles.summaryGrid}>
+          <View style={styles.summaryCol}>
+            <Text style={[styles.summaryNum, { color: colors.success }]}>
+              {result.correctAnswers}
+            </Text>
+            <Text style={styles.summaryLabel}>Benar</Text>
           </View>
 
-          <View style={styles.statCol}>
-            <View style={[styles.statIcon, { backgroundColor: colors.dangerLight }]}>
-              <Ionicons name="close-circle" size={24} color={colors.danger} />
-            </View>
-            <Text style={styles.statValue}>{scoreDetails.incorrectAnswers}</Text>
-            <Text style={styles.statLabel}>Salah</Text>
+          <View style={styles.summaryDivider} />
+
+          <View style={styles.summaryCol}>
+            <Text style={[styles.summaryNum, { color: colors.danger }]}>
+              {scoreDetails.incorrectAnswers}
+            </Text>
+            <Text style={styles.summaryLabel}>Salah</Text>
           </View>
 
-          <View style={styles.statCol}>
-            <View style={[styles.statIcon, { backgroundColor: colors.tintBlue }]}>
-              <Ionicons name="help-circle" size={24} color={colors.primaryLight} />
-            </View>
-            <Text style={styles.statValue}>{result.totalQuestions}</Text>
-            <Text style={styles.statLabel}>Total Soal</Text>
+          <View style={styles.summaryDivider} />
+
+          <View style={styles.summaryCol}>
+            <Text style={styles.summaryNum}>{result.totalQuestions}</Text>
+            <Text style={styles.summaryLabel}>Total Soal</Text>
           </View>
         </View>
 
         <View style={styles.metaRow}>
-          <View style={styles.metaItem}>
-            <Ionicons name="calendar-outline" size={16} color={colors.textSecondary} />
-            <Text style={styles.metaText}>{result.date}</Text>
-          </View>
-          <View style={styles.metaItem}>
-            <Ionicons name="finger-print-outline" size={16} color={colors.textSecondary} />
-            <Text style={styles.metaText}>{result.id}</Text>
-          </View>
+          <Text style={styles.metaLabel}>ID Sesi: {result.id}</Text>
+          <Text style={styles.metaDate}>{result.date}</Text>
         </View>
       </View>
 
-      {/* ACTION BUTTONS (PRD 7.5) */}
-      <View style={styles.actionsContainer}>
+      {/* BUTTONS */}
+      <View style={styles.actionGroup}>
         <PrimaryButton
-          title="Ulangi Tes"
+          title="Ulangi Tes Kategori Ini"
           icon="refresh"
-          variant="primary"
-          onPress={handleRetake}
-          style={styles.actionBtn}
+          onPress={() => router.replace('/category')}
         />
-
         <PrimaryButton
-          title="Lihat Riwayat Tes"
-          icon="receipt-outline"
-          variant="secondary"
-          onPress={handleGoHistory}
-          style={styles.actionBtn}
+          title="Lihat Daftar Riwayat"
+          icon="time-outline"
+          variant="outline"
+          onPress={() => router.push('/history')}
         />
-
         <PrimaryButton
           title="Kembali ke Beranda"
-          icon="home-outline"
           variant="outline"
-          onPress={handleGoHome}
-          style={styles.actionBtn}
+          onPress={() => router.replace('/')}
         />
       </View>
 
-      {/* DISCLAIMER BOX */}
+      {/* DISCLAIMER */}
       <View style={styles.disclaimerBox}>
-        <Ionicons name="information-circle-outline" size={18} color={colors.textMuted} />
-        <Text style={styles.disclaimerText}>{IQSMART_DISCLAIMER}</Text>
+        <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
+        <Text style={styles.disclaimerText}>{MINDORAIQ_DISCLAIMER}</Text>
       </View>
     </ScrollView>
   );
@@ -168,7 +142,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    padding: 18,
     paddingBottom: 40,
   },
   centerContainer: {
@@ -179,160 +153,151 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   notFoundTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginTop: 12,
+    marginTop: 10,
   },
   notFoundDesc: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
-    marginTop: 6,
+    marginTop: 4,
     textAlign: 'center',
   },
-  scoreHeroCard: {
-    backgroundColor: colors.card,
-    borderRadius: 24,
-    padding: 24,
-    alignItems: 'center',
+  scoreCard: {
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    padding: 20,
     borderWidth: 1,
     borderColor: colors.border,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.08,
-    shadowRadius: 12,
-    elevation: 3,
-    marginBottom: 16,
+    alignItems: 'center',
+    marginBottom: 14,
   },
   categoryBadge: {
-    backgroundColor: colors.tintBlue,
-    paddingHorizontal: 12,
+    backgroundColor: colors.surfaceAlt,
+    paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 999,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: colors.border,
     marginBottom: 16,
   },
   categoryBadgeText: {
-    color: colors.primary,
     fontSize: 12,
-    fontWeight: '700',
-    textTransform: 'uppercase',
+    fontWeight: '600',
+    color: colors.textSecondary,
   },
-  circleScoreWrapper: {
+  scoreRow: {
     marginBottom: 14,
   },
-  circleScore: {
-    width: 130,
-    height: 130,
-    borderRadius: 65,
-    borderWidth: 6,
+  percentageCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 4,
+    backgroundColor: colors.surfaceAlt,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: colors.cardAlt,
   },
-  percentageText: {
-    fontSize: 34,
+  percentageNumber: {
+    fontSize: 32,
     fontWeight: '800',
-    color: colors.textPrimary,
   },
   percentageSub: {
-    fontSize: 12,
+    fontSize: 11,
     color: colors.textSecondary,
     fontWeight: '600',
+    marginTop: 2,
   },
-  gradeBadge: {
-    paddingHorizontal: 16,
-    paddingVertical: 6,
-    borderRadius: 12,
+  gradeTag: {
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 6,
     marginBottom: 12,
   },
-  gradeText: {
-    fontSize: 15,
+  gradeTagText: {
+    fontSize: 13,
     fontWeight: '700',
   },
-  evalMessage: {
-    fontSize: 14,
+  evaluationParagraph: {
+    fontSize: 13,
+    lineHeight: 19,
     color: colors.textSecondary,
     textAlign: 'center',
-    lineHeight: 20,
   },
-  breakdownCard: {
-    backgroundColor: colors.card,
-    borderRadius: 20,
-    padding: 18,
+  detailCard: {
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    padding: 16,
     borderWidth: 1,
     borderColor: colors.border,
-    marginBottom: 20,
+    marginBottom: 16,
   },
-  breakdownTitle: {
-    fontSize: 16,
+  detailTitle: {
+    fontSize: 15,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 16,
+    marginBottom: 14,
   },
-  statsRow: {
+  summaryGrid: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    marginBottom: 16,
+    alignItems: 'center',
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: 10,
+    paddingVertical: 12,
+    marginBottom: 12,
   },
-  statCol: {
+  summaryCol: {
+    flex: 1,
     alignItems: 'center',
   },
-  statIcon: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 6,
-  },
-  statValue: {
-    fontSize: 20,
-    fontWeight: '800',
+  summaryNum: {
+    fontSize: 18,
+    fontWeight: '700',
     color: colors.textPrimary,
   },
-  statLabel: {
+  summaryLabel: {
     fontSize: 12,
     color: colors.textSecondary,
     marginTop: 2,
-    fontWeight: '500',
+  },
+  summaryDivider: {
+    width: 1,
+    height: 24,
+    backgroundColor: colors.border,
   },
   metaRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingTop: 8,
     borderTopWidth: 1,
     borderTopColor: colors.border,
-    paddingTop: 12,
   },
-  metaItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 6,
+  metaLabel: {
+    fontSize: 11,
+    color: colors.textMuted,
   },
-  metaText: {
-    fontSize: 12,
+  metaDate: {
+    fontSize: 11,
     color: colors.textSecondary,
-    fontWeight: '500',
   },
-  actionsContainer: {
-    gap: 12,
-    marginBottom: 20,
-  },
-  actionBtn: {
-    height: 50,
+  actionGroup: {
+    gap: 10,
+    marginBottom: 16,
   },
   disclaimerBox: {
     flexDirection: 'row',
-    backgroundColor: colors.cardAlt,
-    borderRadius: 12,
-    padding: 12,
     gap: 8,
+    backgroundColor: colors.surfaceAlt,
+    padding: 12,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: colors.border,
   },
   disclaimerText: {
     flex: 1,
     fontSize: 11,
-    color: colors.textSecondary,
     lineHeight: 16,
+    color: colors.textSecondary,
   },
 });

@@ -18,6 +18,7 @@ interface PrimaryButtonProps {
   icon?: keyof typeof Ionicons.glyphMap;
   style?: ViewStyle;
   textStyle?: TextStyle;
+  size?: 'md' | 'lg';
 }
 
 export default function PrimaryButton({
@@ -28,53 +29,50 @@ export default function PrimaryButton({
   icon,
   style,
   textStyle,
+  size = 'md',
 }: PrimaryButtonProps) {
-  const getContainerStyle = (pressed: boolean) => {
-    let baseBg = colors.primary;
-    let borderColor = 'transparent';
-    let borderWidth = 0;
+  const isOutline = variant === 'outline';
+  const isDanger = variant === 'danger';
+  const isSecondary = variant === 'secondary';
 
-    if (variant === 'secondary') {
-      baseBg = colors.accent;
-    } else if (variant === 'outline') {
-      baseBg = 'transparent';
-      borderColor = colors.primary;
-      borderWidth = 1.5;
-    } else if (variant === 'danger') {
-      baseBg = colors.danger;
-    }
-
-    return [
-      styles.button,
-      {
-        backgroundColor: baseBg,
-        borderColor,
-        borderWidth,
-        opacity: disabled ? 0.5 : pressed ? 0.85 : 1,
-        transform: [{ scale: pressed && !disabled ? 0.98 : 1 }],
-      },
-      style,
-    ];
+  const getBackgroundColor = (pressed: boolean) => {
+    if (disabled) return colors.border;
+    if (isOutline) return pressed ? colors.surfaceAlt : 'transparent';
+    if (isDanger) return pressed ? '#B91C1C' : colors.danger;
+    if (isSecondary) return pressed ? '#3730A3' : colors.accent;
+    return pressed ? colors.primaryHover : colors.primary;
   };
 
   const getTextColor = () => {
-    if (variant === 'outline') {
-      return colors.primary;
-    }
-    return colors.textWhite;
+    if (disabled) return colors.textMuted;
+    if (isOutline) return colors.textPrimary;
+    return colors.textInverse;
   };
+
+  const height = size === 'lg' ? 52 : 46;
 
   return (
     <Pressable
       onPress={onPress}
       disabled={disabled}
-      style={({ pressed }) => getContainerStyle(pressed)}
+      style={({ pressed }) => [
+        styles.button,
+        {
+          height,
+          backgroundColor: getBackgroundColor(pressed),
+          borderColor: isOutline ? colors.borderStrong : 'transparent',
+          borderWidth: isOutline ? 1 : 0,
+          opacity: disabled ? 0.6 : 1,
+          transform: [{ scale: pressed && !disabled ? 0.985 : 1 }],
+        },
+        style,
+      ]}
     >
       <View style={styles.contentRow}>
         {icon && (
           <Ionicons
             name={icon}
-            size={20}
+            size={18}
             color={getTextColor()}
             style={styles.icon}
           />
@@ -89,16 +87,10 @@ export default function PrimaryButton({
 
 const styles = StyleSheet.create({
   button: {
-    height: 52,
-    borderRadius: 14,
+    borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.08,
-    shadowRadius: 4,
-    elevation: 2,
+    paddingHorizontal: 18,
   },
   contentRow: {
     flexDirection: 'row',
@@ -109,8 +101,7 @@ const styles = StyleSheet.create({
     marginRight: 8,
   },
   text: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: '600',
-    letterSpacing: 0.3,
   },
 });

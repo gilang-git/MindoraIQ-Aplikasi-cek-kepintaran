@@ -1,38 +1,39 @@
 import { StyleSheet } from 'react-native';
 
 export const colors = {
-  // Brand colors
-  primary: '#1E3A8A', // Deep Navy
-  primaryDark: '#0F172A', // Slate 900
-  primaryLight: '#3B82F6', // Bright Blue
-  accent: '#6366F1', // Indigo / Ungu modern
-  accentLight: '#EEF2FF', // Indigo 50
+  // Brand foundation - refined slate & cobalt
+  primary: '#1D4ED8',       // Cobalt Blue 700
+  primaryHover: '#1E40AF',
+  primaryLight: '#3B82F6',   // Blue 500
+  primarySoft: '#EFF6FF',    // Blue 50
   
-  // Status colors
-  success: '#10B981', // Emerald 500
-  successLight: '#ECFDF5',
-  warning: '#F59E0B', // Amber 500
-  warningLight: '#FFFBEB',
-  danger: '#EF4444', // Red 500
-  dangerLight: '#FEF2F2',
+  dark: '#0F172A',          // Slate 900
+  darkSurface: '#1E293B',   // Slate 800
+  darkBorder: '#334155',    // Slate 700
   
-  // Neutral colors
-  background: '#F8FAFC', // Slate 50
-  card: '#FFFFFF',
-  cardAlt: '#F1F5F9', // Slate 100
-  border: '#E2E8F0', // Slate 200
-  borderActive: '#3B82F6',
+  accent: '#4F46E5',         // Indigo 600
+  accentSoft: '#EEF2FF',
   
-  // Typography
-  textPrimary: '#0F172A', // Slate 900
-  textSecondary: '#64748B', // Slate 500
-  textMuted: '#94A3B8', // Slate 400
-  textWhite: '#FFFFFF',
+  // Status feedback
+  success: '#059669',       // Emerald 600
+  successSoft: '#ECFDF5',
+  warning: '#D97706',       // Amber 600
+  warningSoft: '#FFFBEB',
+  danger: '#DC2626',        // Rose/Red 600
+  dangerSoft: '#FEF2F2',
   
-  // Gradients / highlight tints
-  tintBlue: '#DBEAFE',
-  tintPurple: '#EDE9FE',
-  tintGreen: '#D1FAE5',
+  // Surface neutrals
+  background: '#F8FAFC',    // Slate 50
+  surface: '#FFFFFF',
+  surfaceAlt: '#F1F5F9',    // Slate 100
+  border: '#E2E8F0',        // Slate 200
+  borderStrong: '#CBD5E1',  // Slate 300
+  
+  // Text hierarchy
+  textPrimary: '#0F172A',
+  textSecondary: '#475569',
+  textMuted: '#94A3B8',
+  textInverse: '#FFFFFF',
 };
 
 export const globalStyles = StyleSheet.create({
@@ -40,39 +41,11 @@ export const globalStyles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.background,
   },
-  contentContainer: {
-    padding: 20,
-  },
   card: {
-    backgroundColor: colors.card,
-    borderRadius: 16,
-    padding: 18,
+    backgroundColor: colors.surface,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: colors.textSecondary,
-    marginTop: 4,
-  },
-  badge: {
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 999,
-    alignSelf: 'flex-start',
-  },
-  badgeText: {
-    fontSize: 12,
-    fontWeight: '600',
+    padding: 16,
   },
 });

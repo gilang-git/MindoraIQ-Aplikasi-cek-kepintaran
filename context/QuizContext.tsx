@@ -14,13 +14,13 @@ interface QuizContextType {
 
 const QuizContext = createContext<QuizContextType | undefined>(undefined);
 
-const STORAGE_KEY = '@iqsmart_quiz_history_v1';
-const USER_KEY = '@iqsmart_user_name_v1';
+const STORAGE_KEY = '@mindoraiq_quiz_history_v1';
+const USER_KEY = '@mindoraiq_user_name_v1';
 
 export const QuizProvider = ({ children }: { children: ReactNode }) => {
   // useState untuk state riwayat dan profil sesuai materi Modul 2
   const [history, setHistory] = useState<QuizResult[]>([]);
-  const [userName, setUserNameState] = useState<string>('Mahasiswa');
+  const [userName, setUserNameState] = useState<string>('Gilang');
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   // useEffect untuk menginisialisasi / memuat riwayat saat aplikasi dibuka

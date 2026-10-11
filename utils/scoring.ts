@@ -9,8 +9,8 @@ export interface ScoreDetails {
 }
 
 /**
- * Menghitung skor kuis berdasarkan jumlah jawaban benar dan total soal
- * sesuai rumus PRD: (Jawaban Benar / Total Soal) * 100
+ * Menghitung skor kuis berdasarkan formula PRD:
+ * (Jawaban Benar / Total Soal) * 100
  */
 export function calculateScore(correctAnswers: number, totalQuestions: number): ScoreDetails {
   const safeTotal = totalQuestions > 0 ? totalQuestions : 1;
@@ -19,24 +19,24 @@ export function calculateScore(correctAnswers: number, totalQuestions: number): 
 
   let evaluationMessage = '';
   let gradeLabel = '';
-  let badgeColor = '#10B981';
+  let badgeColor = '#059669'; // Teal / emerald
 
   if (percentage >= 85) {
-    gradeLabel = 'Sangat Istimewa';
-    evaluationMessage = 'Kemampuan analisis dan penalaran Anda luar biasa tajam! Sebagian besar soal terselesaikan dengan sangat akurat.';
-    badgeColor = '#10B981'; // Emerald
+    gradeLabel = 'Sangat Baik';
+    evaluationMessage = 'Akurasi pengerjaan Anda sangat tinggi. Hampir seluruh analisis pola dan logika berhasil dijawab dengan tepat.';
+    badgeColor = '#059669';
   } else if (percentage >= 70) {
-    gradeLabel = 'Daya Pikir Baik';
-    evaluationMessage = 'Kemampuan penalaran Anda di atas rata-rata. Pemahaman pola logika Anda solid dan konsisten.';
-    badgeColor = '#3B82F6'; // Blue
+    gradeLabel = 'Baik';
+    evaluationMessage = 'Daya nalar Anda konsisten dan memiliki pemahaman struktur logika serta pola yang rapi.';
+    badgeColor = '#2563EB';
   } else if (percentage >= 50) {
-    gradeLabel = 'Cukup / Rata-rata';
-    evaluationMessage = 'Pemahaman logika dasar sudah baik. Dengan lebih banyak latihan ketelitian, hasil Anda akan semakin meningkat.';
-    badgeColor = '#F59E0B'; // Amber
+    gradeLabel = 'Cukup';
+    evaluationMessage = 'Dasar penalaran sudah terbentuk dengan baik, hanya perlu sedikit ketelitian tambahan pada soal jebakan.';
+    badgeColor = '#D97706';
   } else {
     gradeLabel = 'Perlu Latihan';
-    evaluationMessage = 'Tetap semangat! Kemampuan kognitif dan penalaran logika dapat terus diasah melalui latihan rutin.';
-    badgeColor = '#EF4444'; // Red
+    evaluationMessage = 'Hasil ini dapat ditingkatkan dengan membiasakan diri membaca premis dan deret pola secara berkala.';
+    badgeColor = '#DC2626';
   }
 
   return {
@@ -51,7 +51,7 @@ export function calculateScore(correctAnswers: number, totalQuestions: number): 
 }
 
 /**
- * Format timestamp menjadi tanggal lokal Indonesia yang mudah dibaca
+ * Format tanggal pengerjaan kuis ke bahasa Indonesia
  */
 export function formatQuizDate(date: Date = new Date()): string {
   const options: Intl.DateTimeFormatOptions = {
@@ -65,11 +65,13 @@ export function formatQuizDate(date: Date = new Date()): string {
 }
 
 /**
- * Generate unique ID untuk setiap sesi tes
+ * ID hasil tes kuis MindoraIQ
  */
 export function generateResultId(): string {
-  return `IQS-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 900 + 100)}`;
+  const dateStr = Date.now().toString(36).toUpperCase();
+  const randNum = Math.floor(Math.random() * 900 + 100);
+  return `MIQ-${dateStr}-${randNum}`;
 }
 
-export const IQSMART_DISCLAIMER =
-  'IQSmart adalah kuis latihan kemampuan kognitif & penalaran mandiri, bukan tes psikologi klinis resmi. Skor yang ditampilkan merupakan skor internal aplikasi dan tidak merepresentasikan nilai IQ psikometrik tersertifikasi.';
+export const MINDORAIQ_DISCLAIMER =
+  'Aplikasi MindoraIQ dibuat sebagai modul latihan logika dan implementasi praktikum pemrograman mobile. Skor ini merupakan penilaian internal kuis dan bukan hasil asesmen psikologi formal.';

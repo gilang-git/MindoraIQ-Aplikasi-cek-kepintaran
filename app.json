@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "iqsmart",
-    "slug": "iqsmart",
+    "name": "MindoraIQ",
+    "slug": "mindoraiq",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "iqsmart",
+    "scheme": "mindoraiq",
     "userInterfaceStyle": "automatic",
     "ios": {
       "icon": "./assets/expo.icon"

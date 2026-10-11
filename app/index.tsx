@@ -13,16 +13,16 @@ import { Ionicons } from '@expo/vector-icons';
 import PrimaryButton from '../components/PrimaryButton';
 import { useQuiz } from '../context/QuizContext';
 import { CATEGORIES } from '../data/questions';
-import { colors, globalStyles } from '../styles';
-import { IQSMART_DISCLAIMER } from '../utils/scoring';
+import { colors } from '../styles';
+import { MINDORAIQ_DISCLAIMER } from '../utils/scoring';
 
 export default function HomeScreen() {
   const router = useRouter();
   const { userName, setUserName, history } = useQuiz();
 
-  // useState untuk input nama pengguna lokal sesuai modul
-  const [tempName, setTempName] = useState<string>(userName || 'Mahasiswa');
-  const [isEditingName, setIsEditingName] = useState<boolean>(false);
+  // Input nama pengguna (penerapan TextInput & useState sesuai modul)
+  const [tempName, setTempName] = useState<string>(userName || 'Gilang');
+  const [isEditing, setIsEditing] = useState<boolean>(false);
 
   const totalQuestions = CATEGORIES.reduce((acc, cat) => acc + cat.questionCount, 0);
 
@@ -30,143 +30,134 @@ export default function HomeScreen() {
     if (tempName.trim().length > 0) {
       setUserName(tempName.trim());
     } else {
-      setTempName(userName || 'Mahasiswa');
+      setTempName(userName || 'Gilang');
     }
-    setIsEditingName(false);
-  };
-
-  const handleStartTest = () => {
-    router.push('/category');
-  };
-
-  const handleViewHistory = () => {
-    router.push('/history');
+    setIsEditing(false);
   };
 
   return (
-    <SafeAreaView style={styles.safeArea}>
+    <SafeAreaView style={styles.safeContainer}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={styles.scrollArea}
         showsVerticalScrollIndicator={false}
       >
-        {/* HERO SECTION */}
-        <View style={styles.heroCard}>
-          <View style={styles.logoRow}>
-            <View style={styles.logoBadge}>
-              <Ionicons name="sparkles" size={26} color="#FBBF24" />
+        {/* TOP BRAND HEADER */}
+        <View style={styles.headerCard}>
+          <View style={styles.brandRow}>
+            <View style={styles.logoMark}>
+              <Text style={styles.logoMarkText}>M</Text>
             </View>
-            <View>
-              <Text style={styles.appTitle}>IQSmart</Text>
-              <Text style={styles.appSubtitle}>Kuis Kemampuan Kognitif</Text>
+            <View style={styles.brandTextCol}>
+              <Text style={styles.brandTitle}>MindoraIQ</Text>
+              <Text style={styles.brandSubtitle}>Praktikum Pemrograman Mobile</Text>
             </View>
           </View>
 
-          <Text style={styles.heroDesc}>
-            Uji penalaran logika, pola angka, analogi verbal, dan spasial gambar dalam tes interaktif mandiri.
-          </Text>
-
-          {/* User Profile Card with TextInput (Sesuai Modul) */}
-          <View style={styles.userCard}>
-            <View style={styles.userHeader}>
-              <Ionicons name="person-circle-outline" size={22} color={colors.primaryLight} />
-              <Text style={styles.userLabel}>Peserta Tes:</Text>
-            </View>
-
-            {isEditingName ? (
-              <View style={styles.inputRow}>
+          {/* Student Profile Card (TextInput Sesuai Modul) */}
+          <View style={styles.studentCard}>
+            <Text style={styles.studentLabel}>Nama Peserta / Mahasiswa</Text>
+            {isEditing ? (
+              <View style={styles.editRow}>
                 <TextInput
                   style={styles.textInput}
                   value={tempName}
                   onChangeText={setTempName}
                   placeholder="Ketik nama Anda..."
                   placeholderTextColor={colors.textMuted}
-                  maxLength={25}
+                  maxLength={30}
                   autoFocus
                 />
-                <Pressable style={styles.saveNameBtn} onPress={handleSaveName}>
-                  <Text style={styles.saveNameText}>Simpan</Text>
+                <Pressable style={styles.saveBtn} onPress={handleSaveName}>
+                  <Text style={styles.saveBtnText}>Simpan</Text>
                 </Pressable>
               </View>
             ) : (
               <Pressable
-                style={styles.nameDisplayRow}
-                onPress={() => setIsEditingName(true)}
+                style={styles.nameRow}
+                onPress={() => setIsEditing(true)}
               >
-                <Text style={styles.userNameText}>{userName || 'Mahasiswa'}</Text>
-                <Ionicons name="pencil-outline" size={16} color={colors.primaryLight} />
+                <Text style={styles.studentName}>{userName || 'Gilang'}</Text>
+                <View style={styles.editPencil}>
+                  <Ionicons name="pencil-sharp" size={14} color={colors.primaryLight} />
+                  <Text style={styles.editHint}>Ubah</Text>
+                </View>
               </Pressable>
             )}
           </View>
         </View>
 
-        {/* QUICK STATS ROW */}
-        <View style={styles.statsContainer}>
-          <View style={styles.statBox}>
-            <Ionicons name="grid-outline" size={20} color={colors.primaryLight} />
-            <Text style={styles.statNumber}>4</Text>
-            <Text style={styles.statLabel}>Kategori</Text>
+        {/* STATS OVERVIEW */}
+        <View style={styles.statsGrid}>
+          <View style={styles.statCard}>
+            <Text style={styles.statNum}>{CATEGORIES.length}</Text>
+            <Text style={styles.statDesc}>Kategori</Text>
           </View>
-          <View style={styles.statBox}>
-            <Ionicons name="document-text-outline" size={20} color={colors.accent} />
-            <Text style={styles.statNumber}>{totalQuestions}</Text>
-            <Text style={styles.statLabel}>Total Soal</Text>
+          <View style={styles.statCard}>
+            <Text style={styles.statNum}>{totalQuestions}</Text>
+            <Text style={styles.statDesc}>Total Soal</Text>
           </View>
-          <View style={styles.statBox}>
-            <Ionicons name="time-outline" size={20} color={colors.success} />
-            <Text style={styles.statNumber}>{history.length}</Text>
-            <Text style={styles.statLabel}>Tes Selesai</Text>
+          <View style={styles.statCard}>
+            <Text style={styles.statNum}>{history.length}</Text>
+            <Text style={styles.statDesc}>Sesi Riwayat</Text>
           </View>
         </View>
 
-        {/* ACTION BUTTONS (PRD 7.1) */}
-        <View style={styles.actionGroup}>
+        {/* PRIMARY ACTIONS */}
+        <View style={styles.actionBlock}>
           <PrimaryButton
-            title="Mulai Tes Sekarang"
-            icon="play-circle-outline"
-            onPress={handleStartTest}
-            style={styles.mainBtn}
+            title="Mulai Pengerjaan Tes"
+            icon="play"
+            onPress={() => router.push('/category')}
+            size="lg"
           />
-
           <PrimaryButton
-            title={`Riwayat Hasil (${history.length})`}
-            icon="receipt-outline"
+            title={`Lihat Riwayat Hasil (${history.length})`}
+            icon="time-outline"
             variant="outline"
-            onPress={handleViewHistory}
-            style={styles.historyBtn}
+            onPress={() => router.push('/history')}
+            style={styles.secondaryAction}
           />
         </View>
 
-        {/* KATEGORI SOAL OVERVIEW */}
-        <View style={styles.sectionContainer}>
-          <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Cakupan Bidang Tes</Text>
-            <Text style={styles.sectionBadge}>4 Bidang</Text>
+        {/* CATEGORY PREVIEW LIST */}
+        <View style={styles.sectionWrap}>
+          <View style={styles.sectionTop}>
+            <Text style={styles.sectionHeader}>Daftar Kategori Soal</Text>
+            <Text style={styles.sectionNote}>Pilih untuk mulai cepat</Text>
           </View>
 
-          <View style={styles.categoriesGrid}>
-            {CATEGORIES.map((item) => (
+          <View style={styles.categoryStack}>
+            {CATEGORIES.map((cat) => (
               <Pressable
-                key={item.id}
-                style={styles.catCard}
-                onPress={() => router.push({ pathname: '/quiz', params: { category: item.id } })}
+                key={cat.id}
+                style={styles.catItem}
+                onPress={() => router.push({ pathname: '/quiz', params: { category: cat.id } })}
               >
-                <View style={[styles.catIconCircle, { backgroundColor: item.accentColor + '15' }]}>
-                  <Ionicons name={item.icon as any} size={22} color={item.accentColor} />
+                <View style={styles.catLeft}>
+                  <View style={styles.catIconWrap}>
+                    <Ionicons name={cat.icon as any} size={20} color={colors.dark} />
+                  </View>
+                  <View>
+                    <Text style={styles.catTitle}>{cat.name}</Text>
+                    <Text style={styles.catDetail}>{cat.questionCount} soal latihan</Text>
+                  </View>
                 </View>
-                <Text style={styles.catName}>{item.name}</Text>
-                <Text style={styles.catCount}>{item.questionCount} Soal</Text>
+
+                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
               </Pressable>
             ))}
           </View>
         </View>
 
-        {/* DISCLAIMER BOX (PRD 1 & 7.4 & 11.8) */}
-        <View style={styles.disclaimerBox}>
-          <View style={styles.disclaimerHeader}>
-            <Ionicons name="information-circle-outline" size={18} color={colors.textSecondary} />
-            <Text style={styles.disclaimerTitle}>Catatan Ilmiah</Text>
-          </View>
-          <Text style={styles.disclaimerText}>{IQSMART_DISCLAIMER}</Text>
+        {/* DISCLAIMER / PROJECT NOTE */}
+        <View style={styles.footerNote}>
+          <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
+          <Text style={styles.footerNoteText}>{MINDORAIQ_DISCLAIMER}</Text>
+        </View>
+
+        {/* AUTHOR CREDIT FOOTER */}
+        <View style={styles.authorFooter}>
+          <Text style={styles.authorText}>MindoraIQ • Tugas Praktikum Pemrograman Mobile</Text>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -174,232 +165,228 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  safeArea: {
+  safeContainer: {
     flex: 1,
-    backgroundColor: colors.primaryDark,
+    backgroundColor: colors.dark,
   },
-  scrollContent: {
-    padding: 20,
+  scrollArea: {
+    padding: 18,
     backgroundColor: colors.background,
     minHeight: '100%',
   },
-  heroCard: {
-    backgroundColor: colors.primaryDark,
-    borderRadius: 24,
-    padding: 22,
+  headerCard: {
+    backgroundColor: colors.dark,
+    borderRadius: 16,
+    padding: 20,
     marginTop: -8,
     marginBottom: 16,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    elevation: 4,
   },
-  logoRow: {
+  brandRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
-  },
-  logoBadge: {
-    width: 48,
-    height: 48,
-    borderRadius: 14,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 14,
-  },
-  appTitle: {
-    fontSize: 26,
-    fontWeight: '800',
-    color: colors.textWhite,
-    letterSpacing: 0.5,
-  },
-  appSubtitle: {
-    fontSize: 13,
-    color: '#93C5FD',
-    fontWeight: '500',
-  },
-  heroDesc: {
-    fontSize: 14,
-    color: '#CBD5E1',
-    lineHeight: 20,
     marginBottom: 16,
   },
-  userCard: {
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 14,
+  logoMark: {
+    width: 42,
+    height: 42,
+    borderRadius: 10,
+    backgroundColor: colors.primaryLight,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  logoMarkText: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: colors.textInverse,
+  },
+  brandTextCol: {
+    flex: 1,
+  },
+  brandTitle: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: colors.textInverse,
+    letterSpacing: 0.3,
+  },
+  brandSubtitle: {
+    fontSize: 13,
+    color: colors.textMuted,
+    marginTop: 2,
+  },
+  studentCard: {
+    backgroundColor: colors.darkSurface,
+    borderRadius: 10,
     padding: 12,
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.15)',
+    borderColor: colors.darkBorder,
   },
-  userHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 6,
-    gap: 6,
-  },
-  userLabel: {
-    fontSize: 12,
-    color: '#94A3B8',
+  studentLabel: {
+    fontSize: 11,
+    color: colors.textMuted,
     fontWeight: '500',
+    marginBottom: 4,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
   },
-  nameDisplayRow: {
+  nameRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 2,
   },
-  userNameText: {
+  studentName: {
     fontSize: 16,
-    fontWeight: '700',
-    color: colors.textWhite,
+    fontWeight: '600',
+    color: colors.textInverse,
   },
-  inputRow: {
+  editPencil: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  editHint: {
+    fontSize: 12,
+    color: colors.primaryLight,
+    fontWeight: '600',
+  },
+  editRow: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
+    marginTop: 2,
   },
   textInput: {
     flex: 1,
     height: 38,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
     borderRadius: 8,
     paddingHorizontal: 12,
-    color: colors.textWhite,
+    color: colors.textInverse,
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '500',
   },
-  saveNameBtn: {
-    backgroundColor: colors.primaryLight,
+  saveBtn: {
+    backgroundColor: colors.primary,
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 8,
   },
-  saveNameText: {
-    color: colors.textWhite,
+  saveBtnText: {
+    color: colors.textInverse,
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '600',
   },
-  statsContainer: {
+  statsGrid: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
     gap: 10,
+    marginBottom: 16,
   },
-  statBox: {
+  statCard: {
     flex: 1,
-    backgroundColor: colors.card,
-    borderRadius: 16,
-    paddingVertical: 14,
-    alignItems: 'center',
+    backgroundColor: colors.surface,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.border,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.04,
-    shadowRadius: 6,
-    elevation: 2,
+    paddingVertical: 12,
+    alignItems: 'center',
   },
-  statNumber: {
+  statNum: {
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: '700',
     color: colors.textPrimary,
-    marginTop: 4,
   },
-  statLabel: {
-    fontSize: 11,
+  statDesc: {
+    fontSize: 12,
     color: colors.textSecondary,
     marginTop: 2,
-    fontWeight: '500',
   },
-  actionGroup: {
-    gap: 12,
-    marginBottom: 24,
+  actionBlock: {
+    gap: 10,
+    marginBottom: 20,
   },
-  mainBtn: {
-    backgroundColor: colors.primary,
+  secondaryAction: {
+    backgroundColor: colors.surface,
   },
-  historyBtn: {
-    borderColor: colors.primary,
+  sectionWrap: {
+    marginBottom: 20,
   },
-  sectionContainer: {
-    marginBottom: 24,
-  },
-  sectionHeader: {
+  sectionTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  sectionTitle: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: colors.textPrimary,
-  },
-  sectionBadge: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: colors.primaryLight,
-    backgroundColor: colors.tintBlue,
-    paddingHorizontal: 8,
-    paddingVertical: 2,
-    borderRadius: 6,
-  },
-  categoriesGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 10,
-  },
-  catCard: {
-    width: '48%',
-    backgroundColor: colors.card,
-    borderRadius: 16,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-  },
-  catIconCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 10,
   },
-  catName: {
-    fontSize: 14,
+  sectionHeader: {
+    fontSize: 16,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 2,
   },
-  catCount: {
+  sectionNote: {
     fontSize: 12,
-    color: colors.textSecondary,
+    color: colors.textMuted,
   },
-  disclaimerBox: {
-    backgroundColor: colors.cardAlt,
-    borderRadius: 14,
-    padding: 14,
-    borderWidth: 1,
-    borderColor: colors.border,
-    marginBottom: 20,
+  categoryStack: {
+    gap: 8,
   },
-  disclaimerHeader: {
+  catItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
-    marginBottom: 4,
+    justifyContent: 'space-between',
+    backgroundColor: colors.surface,
+    padding: 14,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
-  disclaimerTitle: {
+  catLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  catIconWrap: {
+    width: 38,
+    height: 38,
+    borderRadius: 8,
+    backgroundColor: colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: colors.border,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  catTitle: {
+    fontSize: 15,
+    fontWeight: '600',
+    color: colors.textPrimary,
+  },
+  catDetail: {
     fontSize: 12,
-    fontWeight: '700',
     color: colors.textSecondary,
-    textTransform: 'uppercase',
+    marginTop: 1,
   },
-  disclaimerText: {
+  footerNote: {
+    flexDirection: 'row',
+    gap: 8,
+    backgroundColor: colors.surfaceAlt,
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: 16,
+  },
+  footerNoteText: {
+    flex: 1,
     fontSize: 11,
-    color: colors.textSecondary,
     lineHeight: 16,
+    color: colors.textSecondary,
+  },
+  authorFooter: {
+    alignItems: 'center',
+    paddingVertical: 8,
+  },
+  authorText: {
+    fontSize: 11,
+    color: colors.textMuted,
+    fontWeight: '500',
   },
 });

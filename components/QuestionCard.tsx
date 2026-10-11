@@ -11,7 +11,7 @@ interface QuestionCardProps {
   questionNumber: number;
 }
 
-const OPTION_LABELS = ['A', 'B', 'C', 'D', 'E'];
+const OPTION_KEYS = ['A', 'B', 'C', 'D', 'E'];
 
 export default function QuestionCard({
   question,
@@ -21,59 +21,61 @@ export default function QuestionCard({
 }: QuestionCardProps) {
   return (
     <View style={styles.card}>
-      <View style={styles.header}>
-        <View style={styles.questionNumBadge}>
-          <Text style={styles.questionNumText}>#{questionNumber}</Text>
+      <View style={styles.topMeta}>
+        <View style={styles.numBadge}>
+          <Text style={styles.numText}>Soal {questionNumber}</Text>
         </View>
-        <Text style={styles.cardHeaderHint}>Pilih 1 jawaban yang paling tepat</Text>
+        <Text style={styles.instruction}>Pilih satu jawaban</Text>
       </View>
 
       <Text style={styles.questionText}>{question.question}</Text>
 
-      {/* Daftar Pilihan Jawaban */}
-      <View style={styles.optionsList}>
-        {question.options.map((option, index) => {
-          const isSelected = selectedOption === index;
+      <View style={styles.optionsContainer}>
+        {question.options.map((opt, idx) => {
+          const isSelected = selectedOption === idx;
 
           return (
             <Pressable
-              key={`option-${index}`}
-              onPress={() => onSelectOption(index)}
+              key={`opt-${idx}`}
+              onPress={() => onSelectOption(idx)}
               style={({ pressed }) => [
-                styles.optionItem,
-                isSelected && styles.optionItemSelected,
-                pressed && styles.optionItemPressed,
+                styles.optionRow,
+                isSelected ? styles.optionRowActive : styles.optionRowDefault,
+                pressed && !isSelected && styles.optionRowPressed,
               ]}
             >
               <View
                 style={[
-                  styles.optionLabelBadge,
-                  isSelected && styles.optionLabelBadgeSelected,
+                  styles.keyBox,
+                  isSelected ? styles.keyBoxActive : styles.keyBoxDefault,
                 ]}
               >
                 <Text
                   style={[
-                    styles.optionLabelText,
-                    isSelected && styles.optionLabelTextSelected,
+                    styles.keyText,
+                    isSelected ? styles.keyTextActive : styles.keyTextDefault,
                   ]}
                 >
-                  {OPTION_LABELS[index] || index + 1}
+                  {OPTION_KEYS[idx] || idx + 1}
                 </Text>
               </View>
 
               <Text
                 style={[
-                  styles.optionText,
-                  isSelected && styles.optionTextSelected,
+                  styles.optionLabel,
+                  isSelected && styles.optionLabelActive,
                 ]}
               >
-                {option}
+                {opt}
               </Text>
 
               {isSelected && (
-                <View style={styles.checkIcon}>
-                  <Ionicons name="checkmark-circle" size={22} color={colors.primaryLight} />
-                </View>
+                <Ionicons
+                  name="checkmark-circle"
+                  size={20}
+                  color={colors.primary}
+                  style={styles.checkIcon}
+                />
               )}
             </Pressable>
           );
@@ -85,97 +87,98 @@ export default function QuestionCard({
 
 const styles = StyleSheet.create({
   card: {
-    backgroundColor: colors.card,
-    borderRadius: 20,
-    padding: 20,
+    backgroundColor: colors.surface,
+    borderRadius: 14,
     borderWidth: 1,
     borderColor: colors.border,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.06,
-    shadowRadius: 10,
-    elevation: 3,
+    padding: 18,
   },
-  header: {
+  topMeta: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 14,
+    justifyContent: 'space-between',
+    marginBottom: 12,
   },
-  questionNumBadge: {
-    backgroundColor: colors.primaryDark,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
-    marginRight: 10,
+  numBadge: {
+    backgroundColor: colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: colors.border,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
   },
-  questionNumText: {
-    color: colors.textWhite,
+  numText: {
     fontSize: 12,
     fontWeight: '700',
+    color: colors.textPrimary,
   },
-  cardHeaderHint: {
+  instruction: {
     fontSize: 12,
-    color: colors.textSecondary,
-    fontWeight: '500',
+    color: colors.textMuted,
   },
   questionText: {
-    fontSize: 17,
+    fontSize: 16,
+    lineHeight: 24,
     fontWeight: '600',
     color: colors.textPrimary,
-    lineHeight: 25,
-    marginBottom: 20,
+    marginBottom: 18,
   },
-  optionsList: {
-    gap: 12,
+  optionsContainer: {
+    gap: 10,
   },
-  optionItem: {
+  optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 14,
-    borderRadius: 14,
-    backgroundColor: colors.cardAlt,
-    borderWidth: 1.5,
-    borderColor: 'transparent',
-  },
-  optionItemSelected: {
-    backgroundColor: colors.accentLight,
-    borderColor: colors.primaryLight,
-  },
-  optionItemPressed: {
-    opacity: 0.85,
-  },
-  optionLabelBadge: {
-    width: 32,
-    height: 32,
+    padding: 12,
     borderRadius: 10,
-    backgroundColor: colors.card,
-    borderWidth: 1,
+    borderWidth: 1.5,
+  },
+  optionRowDefault: {
+    backgroundColor: colors.surface,
     borderColor: colors.border,
+  },
+  optionRowActive: {
+    backgroundColor: colors.primarySoft,
+    borderColor: colors.primary,
+  },
+  optionRowPressed: {
+    backgroundColor: colors.surfaceAlt,
+  },
+  keyBox: {
+    width: 28,
+    height: 28,
+    borderRadius: 6,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
-  optionLabelBadgeSelected: {
+  keyBoxDefault: {
+    backgroundColor: colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: colors.border,
+  },
+  keyBoxActive: {
     backgroundColor: colors.primary,
-    borderColor: colors.primary,
   },
-  optionLabelText: {
-    fontSize: 14,
+  keyText: {
+    fontSize: 13,
     fontWeight: '700',
-    color: colors.textPrimary,
   },
-  optionLabelTextSelected: {
-    color: colors.textWhite,
+  keyTextDefault: {
+    color: colors.textSecondary,
   },
-  optionText: {
+  keyTextActive: {
+    color: colors.textInverse,
+  },
+  optionLabel: {
     flex: 1,
-    fontSize: 15,
-    color: colors.textPrimary,
+    fontSize: 14,
     lineHeight: 20,
+    color: colors.textSecondary,
   },
-  optionTextSelected: {
+  optionLabelActive: {
+    color: colors.textPrimary,
     fontWeight: '600',
-    color: colors.primary,
   },
   checkIcon: {
     marginLeft: 8,

@@ -8,7 +8,7 @@ import {
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useQuiz } from '../../context/QuizContext';
-import { calculateScore, IQSMART_DISCLAIMER } from '../../utils/scoring';
+import { calculateScore, MINDORAIQ_DISCLAIMER } from '../../utils/scoring';
 import PrimaryButton from '../../components/PrimaryButton';
 import { colors } from '../../styles';
 
@@ -22,15 +22,15 @@ export default function HistoryDetailScreen() {
   if (!result) {
     return (
       <View style={styles.centerContainer}>
-        <Ionicons name="document-text-outline" size={54} color={colors.textMuted} />
-        <Text style={styles.notFoundTitle}>Detail Riwayat Tidak Ditemukan</Text>
+        <Ionicons name="document-text-outline" size={44} color={colors.textMuted} />
+        <Text style={styles.notFoundTitle}>Detail Tidak Ditemukan</Text>
         <Text style={styles.notFoundDesc}>
-          Data pengerjaan dengan ID "{id}" tidak ditemukan dalam catatan sesi ini.
+          Data pengerjaan dengan ID "{id}" tidak ditemukan dalam sesi saat ini.
         </Text>
         <PrimaryButton
-          title="Kembali ke Daftar Riwayat"
+          title="Kembali ke Riwayat"
           onPress={() => router.back()}
-          style={{ marginTop: 20 }}
+          style={{ marginTop: 16 }}
         />
       </View>
     );
@@ -44,99 +44,72 @@ export default function HistoryDetailScreen() {
       contentContainerStyle={styles.content}
       showsVerticalScrollIndicator={false}
     >
-      {/* Header Info Card */}
+      {/* Kartu Ringkasan Hasil */}
       <View style={styles.mainCard}>
         <View style={styles.cardTopBar}>
-          <View style={styles.idChip}>
-            <Ionicons name="finger-print" size={14} color={colors.primary} />
-            <Text style={styles.idChipText}>{result.id}</Text>
-          </View>
+          <Text style={styles.idChipText}>{result.id}</Text>
           <Text style={styles.dateText}>{result.date}</Text>
         </View>
 
         <Text style={styles.categoryName}>{result.category}</Text>
         <Text style={styles.userParticipant}>
-          Peserta: <Text style={styles.userNameHighlight}>{result.userName || 'Mahasiswa'}</Text>
+          Peserta: <Text style={styles.userNameHighlight}>{result.userName || 'Gilang'}</Text>
         </Text>
 
         <View style={styles.scoreRow}>
           <View style={[styles.scorePill, { borderColor: scoreDetails.badgeColor }]}>
-            <Text style={[styles.scoreValue, { color: scoreDetails.badgeColor }]}>
+            <Text style={[styles.scoreValue, { color: colors.textPrimary }]}>
               {result.percentage}%
             </Text>
             <Text style={styles.scoreUnit}>Akurasi</Text>
           </View>
 
           <View style={styles.scoreSummaryCol}>
-            <View
-              style={[
-                styles.gradeTag,
-                { backgroundColor: scoreDetails.badgeColor + '18' },
-              ]}
-            >
-              <Text
-                style={[
-                  styles.gradeTagText,
-                  { color: scoreDetails.badgeColor },
-                ]}
-              >
-                {scoreDetails.gradeLabel}
-              </Text>
-            </View>
+            <Text style={[styles.gradeText, { color: scoreDetails.badgeColor }]}>
+              {scoreDetails.gradeLabel}
+            </Text>
             <Text style={styles.correctRatio}>
-              {result.correctAnswers} dari {result.totalQuestions} Soal Benar
+              {result.correctAnswers} benar dari {result.totalQuestions} butir soal
             </Text>
           </View>
         </View>
 
         <View style={styles.evalBox}>
-          <Text style={styles.evalBoxTitle}>Evaluasi Kognitif:</Text>
+          <Text style={styles.evalBoxTitle}>Catatan Evaluasi:</Text>
           <Text style={styles.evalBoxContent}>{scoreDetails.evaluationMessage}</Text>
         </View>
       </View>
 
-      {/* Rincian Jawaban */}
+      {/* Rincian Performa */}
       <View style={styles.statDetailCard}>
         <Text style={styles.sectionHeader}>Rangkuman Performa</Text>
 
         <View style={styles.statList}>
           <View style={styles.statRowItem}>
-            <View style={styles.statLabelGroup}>
-              <View style={[styles.dot, { backgroundColor: colors.success }]} />
-              <Text style={styles.statItemLabel}>Jawaban Benar</Text>
-            </View>
+            <Text style={styles.statItemLabel}>Jawaban Benar</Text>
             <Text style={[styles.statItemValue, { color: colors.success }]}>
               {result.correctAnswers} soal
             </Text>
           </View>
 
           <View style={styles.statRowItem}>
-            <View style={styles.statLabelGroup}>
-              <View style={[styles.dot, { backgroundColor: colors.danger }]} />
-              <Text style={styles.statItemLabel}>Jawaban Salah</Text>
-            </View>
+            <Text style={styles.statItemLabel}>Jawaban Salah</Text>
             <Text style={[styles.statItemValue, { color: colors.danger }]}>
               {scoreDetails.incorrectAnswers} soal
             </Text>
           </View>
 
           <View style={styles.statRowItem}>
-            <View style={styles.statLabelGroup}>
-              <View style={[styles.dot, { backgroundColor: colors.primaryLight }]} />
-              <Text style={styles.statItemLabel}>Total Jumlah Soal</Text>
-            </View>
+            <Text style={styles.statItemLabel}>Total Butir Soal</Text>
             <Text style={styles.statItemValue}>
-              {result.totalQuestions} butir
+              {result.totalQuestions} soal
             </Text>
           </View>
 
           <View style={[styles.statRowItem, { borderBottomWidth: 0 }]}>
-            <View style={styles.statLabelGroup}>
-              <View style={[styles.dot, { backgroundColor: colors.accent }]} />
-              <Text style={styles.statItemLabel}>Metode Penilaian</Text>
-            </View>
+            <Text style={styles.statItemLabel}>Metode Hitung</Text>
             <Text style={styles.statItemValue}>
-              Internal Scoring MVP
+              (Benar / Total) × 100
             </Text>
           </View>
         </View>
@@ -145,13 +118,13 @@ export default function HistoryDetailScreen() {
       {/* Tombol Aksi */}
       <View style={styles.btnGroup}>
         <PrimaryButton
-          title="Tes Kategori Ini Lagi"
-          icon="refresh-outline"
+          title="Kerjakan Kuis Lagi"
+          icon="refresh"
           onPress={() => router.replace('/category')}
           style={{ marginBottom: 10 }}
         />
         <PrimaryButton
-          title="Kembali ke Riwayat"
+          title="Kembali ke Daftar Riwayat"
           icon="arrow-back"
           variant="outline"
           onPress={() => router.back()}
@@ -160,7 +133,7 @@ export default function HistoryDetailScreen() {
 
       {/* Disclaimer */}
       <View style={styles.disclaimerBox}>
-        <Text style={styles.disclaimerText}>{IQSMART_DISCLAIMER}</Text>
+        <Text style={styles.disclaimerText}>{MINDORAIQ_DISCLAIMER}</Text>
       </View>
     </ScrollView>
   );
@@ -172,7 +145,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   content: {
-    padding: 20,
+    padding: 18,
     paddingBottom: 40,
   },
   centerContainer: {
@@ -183,183 +156,152 @@ const styles = StyleSheet.create({
     backgroundColor: colors.background,
   },
   notFoundTitle: {
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginTop: 12,
+    marginTop: 10,
   },
   notFoundDesc: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
     textAlign: 'center',
-    marginTop: 6,
-    lineHeight: 20,
+    marginTop: 4,
+    lineHeight: 18,
   },
   mainCard: {
-    backgroundColor: colors.card,
-    borderRadius: 20,
-    padding: 20,
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    padding: 18,
     borderWidth: 1,
     borderColor: colors.border,
-    marginBottom: 16,
-    shadowColor: '#0F172A',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    marginBottom: 14,
   },
   cardTopBar: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 12,
-  },
-  idChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: colors.tintBlue,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    gap: 4,
+    marginBottom: 10,
   },
   idChipText: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: '700',
-    color: colors.primary,
+    color: colors.textMuted,
   },
   dateText: {
-    fontSize: 12,
+    fontSize: 11,
     color: colors.textSecondary,
   },
   categoryName: {
-    fontSize: 20,
-    fontWeight: '800',
+    fontSize: 18,
+    fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 4,
+    marginBottom: 2,
   },
   userParticipant: {
-    fontSize: 13,
+    fontSize: 12,
     color: colors.textSecondary,
-    marginBottom: 16,
+    marginBottom: 14,
   },
   userNameHighlight: {
-    fontWeight: '700',
+    fontWeight: '600',
     color: colors.textPrimary,
   },
   scoreRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 16,
-    marginBottom: 16,
-    paddingBottom: 16,
+    gap: 14,
+    marginBottom: 14,
+    paddingBottom: 14,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
   scorePill: {
-    width: 90,
-    height: 90,
-    borderRadius: 16,
+    width: 80,
+    height: 80,
+    borderRadius: 12,
     borderWidth: 3,
-    backgroundColor: colors.cardAlt,
+    backgroundColor: colors.surfaceAlt,
     justifyContent: 'center',
     alignItems: 'center',
   },
   scoreValue: {
-    fontSize: 26,
-    fontWeight: '800',
+    fontSize: 22,
+    fontWeight: '700',
   },
   scoreUnit: {
-    fontSize: 11,
+    fontSize: 10,
     color: colors.textSecondary,
     fontWeight: '600',
   },
   scoreSummaryCol: {
     flex: 1,
     justifyContent: 'center',
-    gap: 6,
+    gap: 4,
   },
-  gradeTag: {
-    alignSelf: 'flex-start',
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
-  },
-  gradeTagText: {
-    fontSize: 13,
+  gradeText: {
+    fontSize: 16,
     fontWeight: '700',
   },
   correctRatio: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
-    fontWeight: '500',
   },
   evalBox: {
-    backgroundColor: colors.cardAlt,
-    borderRadius: 12,
-    padding: 14,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: 8,
+    padding: 12,
   },
   evalBoxTitle: {
     fontSize: 12,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 4,
+    marginBottom: 3,
   },
   evalBoxContent: {
-    fontSize: 13,
+    fontSize: 12,
     color: colors.textSecondary,
     lineHeight: 18,
   },
   statDetailCard: {
-    backgroundColor: colors.card,
-    borderRadius: 20,
-    padding: 20,
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    padding: 16,
     borderWidth: 1,
     borderColor: colors.border,
-    marginBottom: 20,
+    marginBottom: 16,
   },
   sectionHeader: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 14,
+    marginBottom: 10,
   },
   statList: {
-    gap: 4,
+    gap: 2,
   },
   statRowItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 9,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  statLabelGroup: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  dot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-  },
   statItemLabel: {
-    fontSize: 14,
+    fontSize: 13,
     color: colors.textSecondary,
   },
   statItemValue: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 13,
+    fontWeight: '600',
     color: colors.textPrimary,
   },
   btnGroup: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   disclaimerBox: {
-    backgroundColor: colors.cardAlt,
-    borderRadius: 12,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: 8,
     padding: 12,
     borderWidth: 1,
     borderColor: colors.border,

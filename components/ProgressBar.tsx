@@ -19,13 +19,11 @@ export default function ProgressBar({
   return (
     <View style={styles.container}>
       <View style={styles.headerRow}>
-        <View style={styles.categoryBadge}>
-          <Text style={styles.categoryText}>
-            {categoryName || 'Kuis Kognitif'}
-          </Text>
+        <View style={styles.tag}>
+          <Text style={styles.tagText}>{categoryName || 'Kuis Penalaran'}</Text>
         </View>
-        <Text style={styles.counterText}>
-          Soal <Text style={styles.counterHighlight}>{current}</Text> dari {safeTotal}
+        <Text style={styles.stepText}>
+          {current} <Text style={styles.stepMuted}>/ {safeTotal}</Text>
         </Text>
       </View>
 
@@ -45,7 +43,7 @@ export default function ProgressBar({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 12,
+    marginBottom: 16,
   },
   headerRow: {
     flexDirection: 'row',
@@ -53,36 +51,37 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 8,
   },
-  categoryBadge: {
-    backgroundColor: colors.tintBlue,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 8,
+  tag: {
+    backgroundColor: colors.surfaceAlt,
+    paddingHorizontal: 8,
+    paddingVertical: 3,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
-  categoryText: {
+  tagText: {
     fontSize: 12,
-    fontWeight: '700',
-    color: colors.primary,
-    textTransform: 'uppercase',
-  },
-  counterText: {
-    fontSize: 13,
-    fontWeight: '500',
+    fontWeight: '600',
     color: colors.textSecondary,
   },
-  counterHighlight: {
+  stepText: {
+    fontSize: 13,
     fontWeight: '700',
-    color: colors.primary,
+    color: colors.textPrimary,
+  },
+  stepMuted: {
+    fontWeight: '400',
+    color: colors.textMuted,
   },
   track: {
-    height: 8,
+    height: 6,
     backgroundColor: colors.border,
-    borderRadius: 999,
+    borderRadius: 3,
     overflow: 'hidden',
   },
   fill: {
     height: '100%',
-    backgroundColor: colors.primaryLight,
-    borderRadius: 999,
+    backgroundColor: colors.primary,
+    borderRadius: 3,
   },
 });
