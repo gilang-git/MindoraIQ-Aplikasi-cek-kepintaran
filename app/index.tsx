@@ -11,7 +11,6 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import PrimaryButton from '../components/PrimaryButton';
-import TimeWidget from '../components/TimeWidget';
 import { useQuiz } from '../context/QuizContext';
 import { CATEGORIES } from '../data/questions';
 import { colors } from '../styles';
@@ -41,7 +40,7 @@ export default function HomeScreen() {
         contentContainerStyle={styles.scrollArea}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.headerCard}>
+        < style={styles.headerCard}>
           <View style={styles.brandRow}>
             <View style={styles.logoMark}>
               <Text style={styles.logoMarkText}>M</Text>
@@ -52,7 +51,7 @@ export default function HomeScreen() {
             </View>
           </View>
 
-          <View style={styles.studentCard}>
+          < style={styles.studentCard}>
             <Text style={styles.studentLabel}>Nama Peserta / Mahasiswa</Text>
             {isEditing ? (
               <View style={styles.editRow}>
@@ -81,10 +80,6 @@ export default function HomeScreen() {
                 </View>
               </Pressable>
             )}
-          </View>
-
-          <TimeWidget />
-        </View>
 
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
