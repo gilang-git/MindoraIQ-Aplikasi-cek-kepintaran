@@ -15,24 +15,24 @@ export function calculateScore(correctAnswers: number, totalQuestions: number): 
 
   let evaluationMessage = '';
   let gradeLabel = '';
-  let badgeColor = '#059669';
+  let badgeColor = '#10B981';
 
   if (percentage >= 85) {
     gradeLabel = 'Sangat Baik';
-    evaluationMessage = 'Akurasi pengerjaan Anda sangat tinggi. Hampir seluruh analisis pola dan logika berhasil dijawab dengan tepat.';
-    badgeColor = '#059669';
+    evaluationMessage = 'Akurasi pengerjaan Anda sangat tinggi. Seluruh analisis pola dan penalaran berhasil diselesaikan dengan tepat.';
+    badgeColor = '#10B981';
   } else if (percentage >= 70) {
     gradeLabel = 'Baik';
     evaluationMessage = 'Daya nalar Anda konsisten dan memiliki pemahaman struktur logika serta pola yang rapi.';
-    badgeColor = '#2563EB';
+    badgeColor = '#3B82F6';
   } else if (percentage >= 50) {
     gradeLabel = 'Cukup';
     evaluationMessage = 'Dasar penalaran sudah terbentuk dengan baik, hanya perlu sedikit ketelitian tambahan pada soal jebakan.';
-    badgeColor = '#D97706';
+    badgeColor = '#F59E0B';
   } else {
     gradeLabel = 'Perlu Latihan';
     evaluationMessage = 'Hasil ini dapat ditingkatkan dengan membiasakan diri membaca premis dan deret pola secara berkala.';
-    badgeColor = '#DC2626';
+    badgeColor = '#EF4444';
   }
 
   return {

@@ -85,7 +85,7 @@ export default function HistoryScreen() {
 
         <View style={styles.cardFooter}>
           <Text style={styles.footerHint}>Lihat detail jawaban</Text>
-          <Ionicons name="chevron-forward" size={15} color={colors.primary} />
+          <Ionicons name="chevron-forward" size={15} color={colors.primaryLight} />
         </View>
       </Pressable>
     );
@@ -117,7 +117,7 @@ export default function HistoryScreen() {
       ) : (
         <View style={styles.emptyContainer}>
           <View style={styles.emptyIconCircle}>
-            <Ionicons name="newspaper-outline" size={36} color={colors.textMuted} />
+            <Ionicons name="newspaper-outline" size={36} color={colors.primaryLight} />
           </View>
           <Text style={styles.emptyTitle}>Belum Ada Riwayat</Text>
           <Text style={styles.emptyDesc}>
@@ -148,63 +148,67 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 14,
+    marginBottom: 16,
   },
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
     color: colors.textPrimary,
   },
   subtitle: {
-    fontSize: 12,
+    fontSize: 13,
     color: colors.textSecondary,
     marginTop: 2,
   },
   clearBtn: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
+    width: 38,
+    height: 38,
+    borderRadius: 10,
     backgroundColor: colors.dangerSoft,
+    borderWidth: 1,
+    borderColor: colors.border,
     justifyContent: 'center',
     alignItems: 'center',
   },
   cardItem: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
     marginBottom: 12,
   },
   cardHeaderRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 8,
   },
   idText: {
-    fontSize: 11,
-    fontWeight: '600',
-    color: colors.textMuted,
+    fontSize: 12,
+    fontWeight: '700',
+    color: colors.primaryLight,
   },
   dateText: {
     fontSize: 11,
-    color: colors.textSecondary,
+    color: colors.textMuted,
   },
   categoryTitle: {
-    fontSize: 15,
+    fontSize: 16,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   metricsRow: {
     flexDirection: 'row',
     backgroundColor: colors.surfaceAlt,
-    borderRadius: 8,
-    paddingVertical: 10,
+    borderRadius: 10,
+    paddingVertical: 12,
     alignItems: 'center',
     justifyContent: 'space-around',
-    marginBottom: 10,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   metricItem: {
     alignItems: 'center',
@@ -213,11 +217,12 @@ const styles = StyleSheet.create({
   metricLabel: {
     fontSize: 10,
     color: colors.textMuted,
-    marginBottom: 2,
+    marginBottom: 3,
     textTransform: 'uppercase',
+    fontWeight: '600',
   },
   percentageValue: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '700',
   },
   metricValue: {
@@ -227,7 +232,7 @@ const styles = StyleSheet.create({
   },
   metricDivider: {
     width: 1,
-    height: 20,
+    height: 22,
     backgroundColor: colors.border,
   },
   gradeLabel: {
@@ -238,14 +243,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 8,
+    paddingTop: 10,
     borderTopWidth: 1,
     borderTopColor: colors.border,
   },
   footerHint: {
     fontSize: 12,
-    color: colors.primary,
-    fontWeight: '500',
+    color: colors.primaryLight,
+    fontWeight: '600',
   },
   emptyContainer: {
     flex: 1,
@@ -254,26 +259,28 @@ const styles = StyleSheet.create({
     padding: 30,
   },
   emptyIconCircle: {
-    width: 64,
-    height: 64,
-    borderRadius: 12,
+    width: 68,
+    height: 68,
+    borderRadius: 16,
     backgroundColor: colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: colors.border,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: 14,
   },
   emptyTitle: {
-    fontSize: 16,
+    fontSize: 17,
     fontWeight: '700',
     color: colors.textPrimary,
-    marginBottom: 4,
+    marginBottom: 6,
   },
   emptyDesc: {
     fontSize: 13,
     color: colors.textSecondary,
     textAlign: 'center',
     lineHeight: 18,
-    marginBottom: 18,
+    marginBottom: 20,
   },
   emptyStartBtn: {
     width: '100%',

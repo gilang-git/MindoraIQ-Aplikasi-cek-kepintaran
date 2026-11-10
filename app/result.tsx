@@ -62,7 +62,7 @@ export default function ResultScreen() {
           </View>
         </View>
 
-        <View style={[styles.gradeTag, { backgroundColor: scoreDetails.badgeColor + '15' }]}>
+        <View style={[styles.gradeTag, { backgroundColor: scoreDetails.badgeColor + '22' }]}>
           <Text style={[styles.gradeTagText, { color: scoreDetails.badgeColor }]}>
             Predikat: {scoreDetails.gradeLabel}
           </Text>
@@ -125,7 +125,7 @@ export default function ResultScreen() {
       </View>
 
       <View style={styles.disclaimerBox}>
-        <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
+        <Ionicons name="information-circle-outline" size={16} color={colors.primaryLight} />
         <Text style={styles.disclaimerText}>{MINDORAIQ_DISCLAIMER}</Text>
       </View>
     </ScrollView>
@@ -162,26 +162,26 @@ const styles = StyleSheet.create({
   },
   scoreCard: {
     backgroundColor: colors.surface,
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 20,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
     alignItems: 'center',
     marginBottom: 14,
   },
   categoryBadge: {
-    backgroundColor: colors.surfaceAlt,
-    paddingHorizontal: 10,
-    paddingVertical: 4,
-    borderRadius: 6,
+    backgroundColor: colors.primarySoft,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+    borderRadius: 8,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.primaryBorder,
     marginBottom: 16,
   },
   categoryBadgeText: {
     fontSize: 12,
     fontWeight: '600',
-    color: colors.textSecondary,
+    color: colors.primaryLight,
   },
   scoreRow: {
     marginBottom: 14,
@@ -206,9 +206,9 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   gradeTag: {
-    paddingHorizontal: 12,
-    paddingVertical: 5,
-    borderRadius: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 8,
     marginBottom: 12,
   },
   gradeTagText: {
@@ -223,10 +223,10 @@ const styles = StyleSheet.create({
   },
   detailCard: {
     backgroundColor: colors.surface,
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
     marginBottom: 16,
   },
   detailTitle: {
@@ -239,16 +239,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.surfaceAlt,
-    borderRadius: 10,
+    borderRadius: 12,
     paddingVertical: 12,
-    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   summaryCol: {
     flex: 1,
     alignItems: 'center',
   },
   summaryNum: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
     color: colors.textPrimary,
   },
@@ -259,23 +260,25 @@ const styles = StyleSheet.create({
   },
   summaryDivider: {
     width: 1,
-    height: 24,
+    height: 28,
     backgroundColor: colors.border,
   },
   metaRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingTop: 8,
+    alignItems: 'center',
+    marginTop: 14,
+    paddingTop: 12,
     borderTopWidth: 1,
     borderTopColor: colors.border,
   },
   metaLabel: {
-    fontSize: 11,
+    fontSize: 12,
     color: colors.textMuted,
   },
   metaDate: {
-    fontSize: 11,
-    color: colors.textSecondary,
+    fontSize: 12,
+    color: colors.textMuted,
   },
   actionGroup: {
     gap: 10,
@@ -283,17 +286,17 @@ const styles = StyleSheet.create({
   },
   disclaimerBox: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 10,
     backgroundColor: colors.surfaceAlt,
-    padding: 12,
-    borderRadius: 8,
+    padding: 14,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.border,
   },
   disclaimerText: {
     flex: 1,
-    fontSize: 11,
-    lineHeight: 16,
+    fontSize: 12,
+    lineHeight: 18,
     color: colors.textSecondary,
   },
 });

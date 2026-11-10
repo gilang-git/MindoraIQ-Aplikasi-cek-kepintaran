@@ -123,26 +123,26 @@ export default function HomeScreen() {
               <Pressable
                 key={cat.id}
                 style={styles.catItem}
-                onPress={() => router.push({ pathname: '/quiz', params: { category: cat.id } })}
+                onPress={() => router.push({ pathname: '/category', params: { open: cat.id } })}
               >
                 <View style={styles.catLeft}>
                   <View style={styles.catIconWrap}>
-                    <Ionicons name={cat.icon as any} size={20} color={colors.dark} />
+                    <Ionicons name={cat.icon as any} size={20} color={colors.primaryLight} />
                   </View>
                   <View>
                     <Text style={styles.catTitle}>{cat.name}</Text>
-                    <Text style={styles.catDetail}>{cat.questionCount} soal latihan</Text>
+                    <Text style={styles.catDetail}>{cat.questionCount} butir latihan</Text>
                   </View>
                 </View>
 
-                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                <Ionicons name="chevron-forward" size={18} color={colors.primaryLight} />
               </Pressable>
             ))}
           </View>
         </View>
 
         <View style={styles.footerNote}>
-          <Ionicons name="information-circle-outline" size={16} color={colors.textSecondary} />
+          <Ionicons name="information-circle-outline" size={16} color={colors.primaryLight} />
           <Text style={styles.footerNoteText}>{MINDORAIQ_DISCLAIMER}</Text>
         </View>
 
@@ -157,7 +157,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: colors.dark,
+    backgroundColor: colors.background,
   },
   scrollArea: {
     padding: 18,
@@ -165,11 +165,13 @@ const styles = StyleSheet.create({
     minHeight: '100%',
   },
   headerCard: {
-    backgroundColor: colors.dark,
+    backgroundColor: colors.surface,
     borderRadius: 16,
     padding: 20,
     marginTop: -8,
     marginBottom: 16,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
   },
   brandRow: {
     flexDirection: 'row',
@@ -177,10 +179,10 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   logoMark: {
-    width: 42,
-    height: 42,
-    borderRadius: 10,
-    backgroundColor: colors.primaryLight,
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: colors.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -188,7 +190,7 @@ const styles = StyleSheet.create({
   logoMarkText: {
     fontSize: 22,
     fontWeight: '800',
-    color: colors.textInverse,
+    color: colors.textOnPrimary,
   },
   brandTextCol: {
     flex: 1,
@@ -196,25 +198,25 @@ const styles = StyleSheet.create({
   brandTitle: {
     fontSize: 22,
     fontWeight: '700',
-    color: colors.textInverse,
+    color: colors.textPrimary,
     letterSpacing: 0.3,
   },
   brandSubtitle: {
     fontSize: 13,
-    color: colors.textMuted,
+    color: colors.textSecondary,
     marginTop: 2,
   },
   studentCard: {
-    backgroundColor: colors.darkSurface,
-    borderRadius: 10,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: 12,
     padding: 12,
     borderWidth: 1,
-    borderColor: colors.darkBorder,
+    borderColor: colors.border,
   },
   studentLabel: {
     fontSize: 11,
     color: colors.textMuted,
-    fontWeight: '500',
+    fontWeight: '600',
     marginBottom: 4,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
   studentName: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.textInverse,
+    color: colors.textPrimary,
   },
   editPencil: {
     flexDirection: 'row',
@@ -248,22 +250,24 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    height: 38,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    height: 40,
+    backgroundColor: colors.surfaceElevated,
     borderRadius: 8,
     paddingHorizontal: 12,
-    color: colors.textInverse,
+    color: colors.textPrimary,
     fontSize: 14,
     fontWeight: '500',
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
   },
   saveBtn: {
     backgroundColor: colors.primary,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: 14,
+    paddingVertical: 9,
     borderRadius: 8,
   },
   saveBtnText: {
-    color: colors.textInverse,
+    color: colors.textOnPrimary,
     fontSize: 13,
     fontWeight: '600',
   },
@@ -275,28 +279,28 @@ const styles = StyleSheet.create({
   statCard: {
     flex: 1,
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: colors.border,
-    paddingVertical: 12,
+    borderColor: colors.borderStrong,
+    paddingVertical: 14,
     alignItems: 'center',
   },
   statNum: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: '700',
-    color: colors.textPrimary,
+    color: colors.primaryLight,
   },
   statDesc: {
     fontSize: 12,
     color: colors.textSecondary,
-    marginTop: 2,
+    marginTop: 3,
   },
   actionBlock: {
     gap: 10,
     marginBottom: 20,
   },
   secondaryAction: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceAlt,
   },
   sectionWrap: {
     marginBottom: 20,
@@ -305,7 +309,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   sectionHeader: {
     fontSize: 16,
@@ -317,7 +321,7 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   categoryStack: {
-    gap: 8,
+    gap: 10,
   },
   catItem: {
     flexDirection: 'row',
@@ -325,9 +329,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     backgroundColor: colors.surface,
     padding: 14,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
   },
   catLeft: {
     flexDirection: 'row',
@@ -335,9 +339,9 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   catIconWrap: {
-    width: 38,
-    height: 38,
-    borderRadius: 8,
+    width: 40,
+    height: 40,
+    borderRadius: 10,
     backgroundColor: colors.surfaceAlt,
     borderWidth: 1,
     borderColor: colors.border,
@@ -352,22 +356,22 @@ const styles = StyleSheet.create({
   catDetail: {
     fontSize: 12,
     color: colors.textSecondary,
-    marginTop: 1,
+    marginTop: 2,
   },
   footerNote: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 10,
     backgroundColor: colors.surfaceAlt,
-    padding: 12,
-    borderRadius: 10,
+    padding: 14,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.border,
     marginBottom: 16,
   },
   footerNoteText: {
     flex: 1,
-    fontSize: 11,
-    lineHeight: 16,
+    fontSize: 12,
+    lineHeight: 18,
     color: colors.textSecondary,
   },
   authorFooter: {

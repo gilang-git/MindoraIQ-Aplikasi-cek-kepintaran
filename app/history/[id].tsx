@@ -166,10 +166,10 @@ const styles = StyleSheet.create({
   },
   mainCard: {
     backgroundColor: colors.surface,
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 18,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
     marginBottom: 14,
   },
   cardTopBar: {
@@ -179,13 +179,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   idChipText: {
-    fontSize: 11,
+    fontSize: 12,
     fontWeight: '700',
-    color: colors.textMuted,
+    color: colors.primaryLight,
   },
   dateText: {
     fontSize: 11,
-    color: colors.textSecondary,
+    color: colors.textMuted,
   },
   categoryName: {
     fontSize: 18,
@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
   },
   userNameHighlight: {
     fontWeight: '600',
-    color: colors.textPrimary,
+    color: colors.primaryLight,
   },
   scoreRow: {
     flexDirection: 'row',
@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
   scorePill: {
     width: 80,
     height: 80,
-    borderRadius: 12,
+    borderRadius: 14,
     borderWidth: 3,
     backgroundColor: colors.surfaceAlt,
     justifyContent: 'center',
@@ -244,14 +244,16 @@ const styles = StyleSheet.create({
   },
   evalBox: {
     backgroundColor: colors.surfaceAlt,
-    borderRadius: 8,
+    borderRadius: 10,
     padding: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   evalBoxTitle: {
     fontSize: 12,
     fontWeight: '700',
-    color: colors.textPrimary,
-    marginBottom: 3,
+    color: colors.primaryLight,
+    marginBottom: 4,
   },
   evalBoxContent: {
     fontSize: 12,
@@ -260,10 +262,10 @@ const styles = StyleSheet.create({
   },
   statDetailCard: {
     backgroundColor: colors.surface,
-    borderRadius: 14,
+    borderRadius: 16,
     padding: 16,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
     marginBottom: 16,
   },
   sectionHeader: {
@@ -279,7 +281,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 9,
+    paddingVertical: 10,
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
@@ -297,7 +299,7 @@ const styles = StyleSheet.create({
   },
   disclaimerBox: {
     backgroundColor: colors.surfaceAlt,
-    borderRadius: 8,
+    borderRadius: 10,
     padding: 12,
     borderWidth: 1,
     borderColor: colors.border,

@@ -1,102 +1,218 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   Pressable,
+  Modal,
 } from 'react-native';
-import { useRouter } from 'expo-router';
+import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { CATEGORIES } from '../data/questions';
 import { colors } from '../styles';
+import { useQuiz } from '../context/QuizContext';
+import PrimaryButton from '../components/PrimaryButton';
+
+interface ConfirmationData {
+  id: string;
+  name: string;
+  count: number;
+  description: string;
+}
 
 export default function CategoryScreen() {
   const router = useRouter();
+  const params = useLocalSearchParams<{ open?: string }>();
+  const { userName } = useQuiz();
+  const [selectedCategory, setSelectedCategory] = useState<ConfirmationData | null>(null);
 
-  const handleSelectCategory = (categoryId: string) => {
-    router.push({
-      pathname: '/quiz',
-      params: { category: categoryId },
+  React.useEffect(() => {
+    if (params.open) {
+      if (params.open === 'all') {
+        handleOpenConfirmAll();
+      } else {
+        handleOpenConfirm(params.open);
+      }
+    }
+  }, [params.open]);
+
+  const handleOpenConfirm = (categoryId: string) => {
+    const cat = CATEGORIES.find((c) => c.id === categoryId);
+    if (cat) {
+      setSelectedCategory({
+        id: cat.id,
+        name: cat.name,
+        count: cat.questionCount,
+        description: cat.description,
+      });
+    }
+  };
+
+  const handleOpenConfirmAll = () => {
+    setSelectedCategory({
+      id: 'all',
+      name: 'Semua Materi (Campuran)',
+      count: 20,
+      description: 'Mencakup gabungan soal Logika, Pola Angka, Penalaran Verbal, dan Pola Gambar sekaligus.',
     });
   };
 
-  const handleSelectAll = () => {
+  const handleStartQuiz = () => {
+    if (!selectedCategory) return;
+    const catId = selectedCategory.id;
+    setSelectedCategory(null);
     router.push({
       pathname: '/quiz',
-      params: { category: 'all' },
+      params: { category: catId },
     });
+  };
+
+  const handleCloseModal = () => {
+    setSelectedCategory(null);
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.content}
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.topInfo}>
-        <Text style={styles.pageTitle}>Pilih Bidang Uji</Text>
-        <Text style={styles.pageSubtitle}>
-          Tentukan topik tes yang ingin Anda kerjakan atau pilih tes komprehensif seluruh materi.
-        </Text>
-      </View>
+    <View style={styles.outerContainer}>
+      <ScrollView
+        style={styles.container}
+        contentContainerStyle={styles.content}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.topInfo}>
+          <Text style={styles.pageTitle}>Pilih Bidang Uji</Text>
+          <Text style={styles.pageSubtitle}>
+            Tentukan topik tes yang ingin Anda kerjakan atau pilih tes komprehensif seluruh materi.
+          </Text>
+        </View>
 
-      <Pressable style={styles.allBox} onPress={handleSelectAll}>
-        <View style={styles.allHeader}>
-          <View style={styles.allTag}>
-            <Text style={styles.allTagText}>Latihan Lengkap</Text>
+        <Pressable style={styles.allBox} onPress={handleOpenConfirmAll}>
+          <View style={styles.allHeader}>
+            <View style={styles.allTag}>
+              <Text style={styles.allTagText}>Latihan Lengkap</Text>
+            </View>
+            <Text style={styles.allBadge}>20 Butir Soal</Text>
           </View>
-          <Text style={styles.allBadge}>20 Butir Soal</Text>
+
+          <Text style={styles.allTitle}>Semua Materi (Campuran)</Text>
+          <Text style={styles.allDesc}>
+            Mencakup gabungan soal Logika, Pola Angka, Penalaran Verbal, dan Pola Gambar sekaligus.
+          </Text>
+
+          <View style={styles.allFooter}>
+            <Text style={styles.startLink}>Mulai Seluruh Soal</Text>
+            <Ionicons name="arrow-forward" size={16} color={colors.primaryLight} />
+          </View>
+        </Pressable>
+
+        <View style={styles.dividerBlock}>
+          <View style={styles.line} />
+          <Text style={styles.dividerText}>ATAU PILIH SALAH SATU</Text>
+          <View style={styles.line} />
         </View>
 
-        <Text style={styles.allTitle}>Semua Materi (Campuran)</Text>
-        <Text style={styles.allDesc}>
-          Mencakup gabungan soal Logika, Pola Angka, Penalaran Verbal, dan Pola Gambar sekaligus.
-        </Text>
+        <View style={styles.categoryStack}>
+          {CATEGORIES.map((cat) => (
+            <Pressable
+              key={cat.id}
+              style={styles.card}
+              onPress={() => handleOpenConfirm(cat.id)}
+            >
+              <View style={styles.cardHeader}>
+                <View style={styles.iconBox}>
+                  <Ionicons name={cat.icon as any} size={20} color={colors.primaryLight} />
+                </View>
+                <View style={styles.countTag}>
+                  <Text style={styles.countTagText}>{cat.questionCount} Soal</Text>
+                </View>
+              </View>
 
-        <View style={styles.allFooter}>
-          <Text style={styles.startLink}>Mulai Seluruh Soal</Text>
-          <Ionicons name="arrow-forward" size={16} color={colors.primaryLight} />
+              <Text style={styles.title}>{cat.name}</Text>
+              <Text style={styles.desc}>{cat.description}</Text>
+
+              <View style={styles.cardAction}>
+                <Text style={styles.actionText}>Buka Soal</Text>
+                <Ionicons name="chevron-forward" size={16} color={colors.primaryLight} />
+              </View>
+            </Pressable>
+          ))}
         </View>
-      </Pressable>
+      </ScrollView>
 
-      <View style={styles.dividerBlock}>
-        <View style={styles.line} />
-        <Text style={styles.dividerText}>ATAU PILIH SALAH SATU</Text>
-        <View style={styles.line} />
-      </View>
-
-      <View style={styles.categoryStack}>
-        {CATEGORIES.map((cat) => (
-          <Pressable
-            key={cat.id}
-            style={styles.card}
-            onPress={() => handleSelectCategory(cat.id)}
-          >
-            <View style={styles.cardHeader}>
-              <View style={styles.iconBox}>
-                <Ionicons name={cat.icon as any} size={20} color={colors.primary} />
+      {selectedCategory && (
+        <Modal
+          visible={true}
+          transparent
+          animationType="fade"
+          onRequestClose={handleCloseModal}
+        >
+          <View style={styles.modalBackdrop}>
+            <View style={styles.modalCard}>
+              <View style={styles.modalIconWrap}>
+                <Ionicons name="clipboard-outline" size={26} color={colors.primaryLight} />
               </View>
-              <View style={styles.countTag}>
-                <Text style={styles.countTagText}>{cat.questionCount} Soal</Text>
+
+              <Text style={styles.modalTitle}>Konfirmasi Mulai Tes</Text>
+              <Text style={styles.modalSubtitle}>
+                Periksa rincian sesi tes berikut sebelum Anda mulai mengerjakan.
+              </Text>
+
+              <View style={styles.modalDetailsBox}>
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Kategori</Text>
+                  <Text style={styles.detailValueHighlight}>{selectedCategory.name}</Text>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Jumlah Soal</Text>
+                  <Text style={styles.detailValue}>{selectedCategory.count} Butir Soal</Text>
+                </View>
+
+                <View style={styles.detailRow}>
+                  <Text style={styles.detailLabel}>Nama Peserta</Text>
+                  <Text style={styles.detailValue}>{userName || 'Gilang'}</Text>
+                </View>
+
+                <View style={[styles.detailRow, { borderBottomWidth: 0 }]}>
+                  <Text style={styles.detailLabel}>Format Ujian</Text>
+                  <Text style={styles.detailValue}>Pilihan Ganda (Tunggal)</Text>
+                </View>
+              </View>
+
+              <View style={styles.modalNotice}>
+                <Ionicons name="information-circle-outline" size={16} color={colors.primaryLight} />
+                <Text style={styles.modalNoticeText}>
+                  Setiap butir soal wajib dijawab sebelum lanjut. Skor akhir dihitung otomatis setelah pengerjaan selesai.
+                </Text>
+              </View>
+
+              <View style={styles.modalActionCol}>
+                <PrimaryButton
+                  title="Mulai Pengerjaan Sekarang"
+                  icon="play"
+                  onPress={handleStartQuiz}
+                  size="lg"
+                />
+                <PrimaryButton
+                  title="Batal"
+                  variant="outline"
+                  onPress={handleCloseModal}
+                  style={styles.cancelBtn}
+                />
               </View>
             </View>
-
-            <Text style={styles.title}>{cat.name}</Text>
-            <Text style={styles.desc}>{cat.description}</Text>
-
-            <View style={styles.cardAction}>
-              <Text style={styles.actionText}>Buka Soal</Text>
-              <Ionicons name="chevron-forward" size={16} color={colors.primary} />
-            </View>
-          </Pressable>
-        ))}
-      </View>
-    </ScrollView>
+          </View>
+        </Modal>
+      )}
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  outerContainer: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
   container: {
     flex: 1,
     backgroundColor: colors.background,
@@ -120,10 +236,12 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   allBox: {
-    backgroundColor: colors.dark,
-    borderRadius: 14,
+    backgroundColor: colors.surface,
+    borderRadius: 16,
     padding: 18,
     marginBottom: 16,
+    borderWidth: 1.5,
+    borderColor: colors.primaryBorder,
   },
   allHeader: {
     flexDirection: 'row',
@@ -132,30 +250,32 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   allTag: {
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
+    backgroundColor: colors.primarySoft,
     paddingHorizontal: 8,
     paddingVertical: 3,
     borderRadius: 6,
+    borderWidth: 1,
+    borderColor: colors.primaryBorder,
   },
   allTagText: {
     fontSize: 11,
-    color: colors.textInverse,
+    color: colors.primaryLight,
     fontWeight: '600',
   },
   allBadge: {
     fontSize: 12,
-    color: '#93C5FD',
+    color: colors.primaryLight,
     fontWeight: '600',
   },
   allTitle: {
     fontSize: 17,
     fontWeight: '700',
-    color: colors.textInverse,
+    color: colors.textPrimary,
     marginBottom: 6,
   },
   allDesc: {
     fontSize: 13,
-    color: '#CBD5E1',
+    color: colors.textSecondary,
     lineHeight: 18,
     marginBottom: 14,
   },
@@ -164,7 +284,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 6,
     borderTopWidth: 1,
-    borderTopColor: 'rgba(255, 255, 255, 0.1)',
+    borderTopColor: colors.border,
     paddingTop: 10,
   },
   startLink: {
@@ -194,10 +314,10 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 12,
+    borderRadius: 14,
     padding: 16,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
   },
   cardHeader: {
     flexDirection: 'row',
@@ -206,10 +326,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   iconBox: {
-    width: 36,
-    height: 36,
-    borderRadius: 8,
-    backgroundColor: colors.primarySoft,
+    width: 38,
+    height: 38,
+    borderRadius: 10,
+    backgroundColor: colors.surfaceAlt,
+    borderWidth: 1,
+    borderColor: colors.border,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -247,6 +369,102 @@ const styles = StyleSheet.create({
   actionText: {
     fontSize: 13,
     fontWeight: '600',
-    color: colors.primary,
+    color: colors.primaryLight,
+  },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalCard: {
+    width: '100%',
+    maxWidth: 380,
+    backgroundColor: colors.surface,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    borderColor: colors.borderStrong,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalIconWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: colors.primarySoft,
+    borderWidth: 1,
+    borderColor: colors.primaryBorder,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: colors.textPrimary,
+    textAlign: 'center',
+  },
+  modalSubtitle: {
+    fontSize: 13,
+    color: colors.textSecondary,
+    textAlign: 'center',
+    marginTop: 4,
+    marginBottom: 16,
+    lineHeight: 18,
+  },
+  modalDetailsBox: {
+    width: '100%',
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: 12,
+    padding: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    marginBottom: 14,
+  },
+  detailRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  detailLabel: {
+    fontSize: 12,
+    color: colors.textMuted,
+  },
+  detailValue: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: colors.textPrimary,
+  },
+  detailValueHighlight: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: colors.primaryLight,
+  },
+  modalNotice: {
+    flexDirection: 'row',
+    gap: 8,
+    alignItems: 'center',
+    backgroundColor: colors.primarySoft,
+    padding: 10,
+    borderRadius: 10,
+    marginBottom: 18,
+    width: '100%',
+  },
+  modalNoticeText: {
+    flex: 1,
+    fontSize: 11,
+    color: colors.textSecondary,
+    lineHeight: 16,
+  },
+  modalActionCol: {
+    width: '100%',
+    gap: 8,
+  },
+  cancelBtn: {
+    backgroundColor: colors.surfaceAlt,
   },
 });

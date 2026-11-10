@@ -53,16 +53,16 @@ const styles = StyleSheet.create({
   },
   tag: {
     backgroundColor: colors.surfaceAlt,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
     borderWidth: 1,
     borderColor: colors.border,
   },
   tagText: {
     fontSize: 12,
     fontWeight: '600',
-    color: colors.textSecondary,
+    color: colors.primaryLight,
   },
   stepText: {
     fontSize: 13,
@@ -74,14 +74,16 @@ const styles = StyleSheet.create({
     color: colors.textMuted,
   },
   track: {
-    height: 6,
-    backgroundColor: colors.border,
-    borderRadius: 3,
+    height: 7,
+    backgroundColor: colors.surfaceAlt,
+    borderRadius: 4,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: colors.border,
   },
   fill: {
     height: '100%',
     backgroundColor: colors.primary,
-    borderRadius: 3,
+    borderRadius: 4,
   },
 });

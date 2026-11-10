@@ -4,6 +4,7 @@ import {
   Text,
   StyleSheet,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
@@ -97,12 +98,26 @@ export default function QuizScreen() {
     }
   };
 
-  const handleFinishQuiz = async () => {
+  const handleFinishQuiz = () => {
     if (selectedOption === null || selectedOption === undefined) {
       setValidationWarning('Pilih salah satu jawaban terlebih dahulu sebelum menyelesaikan tes.');
       return;
     }
 
+    Alert.alert(
+      'Konfirmasi Selesai Tes',
+      'Apakah Anda yakin ingin menyelesaikan seluruh soal dan melihat hasil evaluasi skor?',
+      [
+        { text: 'Periksa Kembali', style: 'cancel' },
+        {
+          text: 'Ya, Selesaikan',
+          onPress: () => processFinishQuiz(),
+        },
+      ]
+    );
+  };
+
+  const processFinishQuiz = async () => {
     setIsSubmitting(true);
     setValidationWarning(null);
 
@@ -224,11 +239,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 8,
     backgroundColor: colors.dangerSoft,
-    borderColor: '#FECACA',
+    borderColor: colors.danger,
     borderWidth: 1,
-    borderRadius: 8,
-    padding: 10,
-    marginBottom: 12,
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 14,
   },
   warningText: {
     flex: 1,
@@ -243,7 +258,7 @@ const styles = StyleSheet.create({
   },
   prevBtn: {
     flex: 1,
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceAlt,
   },
   nextBtn: {
     flex: 2,

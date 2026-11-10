@@ -36,17 +36,17 @@ export default function PrimaryButton({
   const isSecondary = variant === 'secondary';
 
   const getBackgroundColor = (pressed: boolean) => {
-    if (disabled) return colors.border;
-    if (isOutline) return pressed ? colors.surfaceAlt : 'transparent';
-    if (isDanger) return pressed ? '#B91C1C' : colors.danger;
-    if (isSecondary) return pressed ? '#3730A3' : colors.accent;
+    if (disabled) return colors.surfaceAlt;
+    if (isOutline) return pressed ? colors.surfaceAlt : colors.surface;
+    if (isDanger) return pressed ? '#DC2626' : colors.danger;
+    if (isSecondary) return pressed ? '#4F46E5' : colors.accent;
     return pressed ? colors.primaryHover : colors.primary;
   };
 
   const getTextColor = () => {
     if (disabled) return colors.textMuted;
     if (isOutline) return colors.textPrimary;
-    return colors.textInverse;
+    return colors.textOnPrimary;
   };
 
   const height = size === 'lg' ? 52 : 46;
@@ -87,7 +87,7 @@ export default function PrimaryButton({
 
 const styles = StyleSheet.create({
   button: {
-    borderRadius: 10,
+    borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 18,

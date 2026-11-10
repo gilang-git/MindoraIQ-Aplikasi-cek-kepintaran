@@ -25,7 +25,7 @@ export default function QuestionCard({
         <View style={styles.numBadge}>
           <Text style={styles.numText}>Soal {questionNumber}</Text>
         </View>
-        <Text style={styles.instruction}>Pilih satu jawaban</Text>
+        <Text style={styles.instruction}>Pilih satu jawaban yang tepat</Text>
       </View>
 
       <Text style={styles.questionText}>{question.question}</Text>
@@ -73,7 +73,7 @@ export default function QuestionCard({
                 <Ionicons
                   name="checkmark-circle"
                   size={20}
-                  color={colors.primary}
+                  color={colors.primaryLight}
                   style={styles.checkIcon}
                 />
               )}
@@ -88,9 +88,9 @@ export default function QuestionCard({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: colors.surface,
-    borderRadius: 14,
+    borderRadius: 16,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
     padding: 18,
   },
   topMeta: {
@@ -103,14 +103,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surfaceAlt,
     borderWidth: 1,
     borderColor: colors.border,
-    paddingHorizontal: 8,
-    paddingVertical: 3,
-    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 8,
   },
   numText: {
     fontSize: 12,
     fontWeight: '700',
-    color: colors.textPrimary,
+    color: colors.primaryLight,
   },
   instruction: {
     fontSize: 12,
@@ -124,51 +124,53 @@ const styles = StyleSheet.create({
     marginBottom: 18,
   },
   optionsContainer: {
-    gap: 10,
+    gap: 8,
   },
   optionRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 12,
-    borderRadius: 10,
-    borderWidth: 1.5,
+    padding: 14,
+    borderRadius: 12,
   },
   optionRowDefault: {
-    backgroundColor: colors.surface,
+    backgroundColor: colors.surfaceAlt,
+    borderWidth: 1,
     borderColor: colors.border,
   },
   optionRowActive: {
     backgroundColor: colors.primarySoft,
-    borderColor: colors.primary,
+    borderWidth: 1.5,
+    borderColor: colors.primaryLight,
   },
   optionRowPressed: {
-    backgroundColor: colors.surfaceAlt,
+    backgroundColor: colors.surfaceElevated,
   },
   keyBox: {
-    width: 28,
-    height: 28,
-    borderRadius: 6,
+    width: 32,
+    height: 32,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
   },
   keyBoxDefault: {
-    backgroundColor: colors.surfaceAlt,
+    backgroundColor: colors.surface,
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: colors.borderStrong,
   },
   keyBoxActive: {
     backgroundColor: colors.primary,
   },
   keyText: {
     fontSize: 13,
-    fontWeight: '700',
   },
   keyTextDefault: {
+    fontWeight: '700',
     color: colors.textSecondary,
   },
   keyTextActive: {
-    color: colors.textInverse,
+    fontWeight: '700',
+    color: colors.textOnPrimary,
   },
   optionLabel: {
     flex: 1,
