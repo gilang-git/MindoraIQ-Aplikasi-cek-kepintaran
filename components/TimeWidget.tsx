@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
+    backgroundColor: colors.surfaceAlt,
     borderRadius: 8,
     paddingHorizontal: 10,
     paddingVertical: 8,
@@ -71,14 +71,14 @@ const styles = StyleSheet.create({
   },
   label: {
     fontSize: 10,
-    color: "rgba(255, 255, 255, 0.7)",
+    color: colors.textSecondary,
     textTransform: "uppercase",
     letterSpacing: 0.5,
   },
   value: {
     fontSize: 13,
     fontWeight: "600",
-    color: colors.textInverse,
+    color: colors.textPrimary,
     marginTop: 1,
   },
   spinner: {

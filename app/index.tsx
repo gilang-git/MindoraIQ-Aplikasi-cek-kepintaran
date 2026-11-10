@@ -162,7 +162,7 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   safeContainer: {
     flex: 1,
-    backgroundColor: colors.dark,
+    backgroundColor: colors.background,
   },
   scrollArea: {
     padding: 18,
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     minHeight: '100%',
   },
   headerCard: {
-    backgroundColor: colors.dark,
+    backgroundColor: colors.background,
     borderRadius: 16,
     padding: 20,
     marginTop: -8,
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
   logoMarkText: {
     fontSize: 22,
     fontWeight: '800',
-    color: colors.textInverse,
+    color: colors.textOnPrimary,
   },
   brandTextCol: {
     flex: 1,
@@ -201,24 +201,24 @@ const styles = StyleSheet.create({
   brandTitle: {
     fontSize: 22,
     fontWeight: '700',
-    color: colors.textInverse,
+    color: colors.textPrimary,
     letterSpacing: 0.3,
   },
   brandSubtitle: {
     fontSize: 13,
-    color: colors.textMuted,
+    color: colors.textSecondary,
     marginTop: 2,
   },
   studentCard: {
-    backgroundColor: colors.darkSurface,
+    backgroundColor: colors.surface,
     borderRadius: 10,
     padding: 12,
     borderWidth: 1,
-    borderColor: colors.darkBorder,
+    borderColor: colors.border,
   },
   studentLabel: {
     fontSize: 11,
-    color: colors.textMuted,
+    color: colors.textSecondary,
     fontWeight: '500',
     marginBottom: 4,
     textTransform: 'uppercase',
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   studentName: {
     fontSize: 16,
     fontWeight: '600',
-    color: colors.textInverse,
+    color: colors.textPrimary,
   },
   editPencil: {
     flexDirection: 'row',
@@ -254,10 +254,10 @@ const styles = StyleSheet.create({
   textInput: {
     flex: 1,
     height: 38,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: colors.surfaceAlt,
     borderRadius: 8,
     paddingHorizontal: 12,
-    color: colors.textInverse,
+    color: colors.textPrimary,
     fontSize: 14,
     fontWeight: '500',
   },
@@ -268,7 +268,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   saveBtnText: {
-    color: colors.textInverse,
+    color: colors.textOnPrimary,
     fontSize: 13,
     fontWeight: '600',
   },
