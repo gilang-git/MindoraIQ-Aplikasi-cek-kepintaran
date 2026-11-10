@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import PrimaryButton from '../components/PrimaryButton';
+import TimeWidget from '../components/TimeWidget';
 import { useQuiz } from '../context/QuizContext';
 import { CATEGORIES } from '../data/questions';
 import { colors } from '../styles';
@@ -81,6 +82,8 @@ export default function HomeScreen() {
               </Pressable>
             )}
           </View>
+
+          <TimeWidget />
         </View>
 
         <View style={styles.statsGrid}>
