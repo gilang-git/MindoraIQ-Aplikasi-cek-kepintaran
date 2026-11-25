@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -6,25 +6,57 @@ import {
   ScrollView,
   TextInput,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import PrimaryButton from '../components/PrimaryButton';
-import TimeWidget from '../components/TimeWidget';
-import { useQuiz } from '../context/QuizContext';
-import { CATEGORIES } from '../data/questions';
-import { colors } from '../styles';
-import { MINDORAIQ_DISCLAIMER } from '../utils/scoring';
+import PrimaryButton from '../../components/PrimaryButton';
+import TimeWidget from '../../components/TimeWidget';
+import { useQuiz } from '../../context/QuizContext';
+import { useAuth } from '../../context/AuthContext';
+import { getCategories, getTotalQuestionCount } from '../../database/questionBank';
+import { CategoryItem } from '../../types/quiz';
+import { colors } from '../../styles';
+import { confirmAction } from '../../utils/dialog';
+import { MINDORAIQ_DISCLAIMER } from '../../utils/scoring';
 
 export default function HomeScreen() {
   const router = useRouter();
   const { userName, setUserName, history } = useQuiz();
+  const { user, signOut } = useAuth();
 
   const [tempName, setTempName] = useState<string>(userName || 'Gilang');
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [totalQuestions, setTotalQuestions] = useState<number>(0);
+  const [isLoadingCategories, setIsLoadingCategories] = useState<boolean>(true);
 
-  const totalQuestions = CATEGORIES.reduce((acc, cat) => acc + cat.questionCount, 0);
+  useEffect(() => {
+    let isActive = true;
+
+    const loadCatalog = async () => {
+      try {
+        const [loadedCategories, count] = await Promise.all([
+          getCategories(),
+          getTotalQuestionCount(),
+        ]);
+        if (!isActive) return;
+        setCategories(loadedCategories);
+        setTotalQuestions(count);
+      } catch (error) {
+        console.warn('Gagal memuat bank soal dari Supabase:', error);
+      } finally {
+        if (isActive) setIsLoadingCategories(false);
+      }
+    };
+
+    loadCatalog();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   const handleSaveName = () => {
     if (tempName.trim().length > 0) {
@@ -33,6 +65,16 @@ export default function HomeScreen() {
       setTempName(userName || 'Gilang');
     }
     setIsEditing(false);
+  };
+
+  const handleSignOut = () => {
+    confirmAction({
+      title: 'Keluar Akun',
+      message: 'Anda akan keluar dari sesi saat ini. Lanjutkan?',
+      confirmText: 'Keluar',
+      destructive: true,
+      onConfirm: () => signOut(),
+    });
   };
 
   return (
@@ -50,7 +92,20 @@ export default function HomeScreen() {
               <Text style={styles.brandTitle}>MindoraIQ</Text>
               <Text style={styles.brandSubtitle}>Praktikum Pemrograman Mobile</Text>
             </View>
+            <Pressable style={styles.signOutBtn} onPress={handleSignOut}>
+              <Ionicons name="log-out-outline" size={16} color={colors.danger} />
+              <Text style={styles.signOutBtnText}>Keluar</Text>
+            </Pressable>
           </View>
+
+          {user?.email && (
+            <View style={styles.accountBadge}>
+              <Ionicons name="person-circle-outline" size={14} color={colors.textSecondary} />
+              <Text style={styles.accountBadgeText} numberOfLines={1}>
+                Masuk sebagai {user.email}
+              </Text>
+            </View>
+          )}
 
           <View style={styles.studentCard}>
             <Text style={styles.studentLabel}>Nama Peserta / Mahasiswa</Text>
@@ -88,7 +143,7 @@ export default function HomeScreen() {
 
         <View style={styles.statsGrid}>
           <View style={styles.statCard}>
-            <Text style={styles.statNum}>{CATEGORIES.length}</Text>
+            <Text style={styles.statNum}>{categories.length}</Text>
             <Text style={styles.statDesc}>Kategori</Text>
           </View>
           <View style={styles.statCard}>
@@ -123,27 +178,34 @@ export default function HomeScreen() {
             <Text style={styles.sectionNote}>Pilih untuk mulai cepat</Text>
           </View>
 
-          <View style={styles.categoryStack}>
-            {CATEGORIES.map((cat) => (
-              <Pressable
-                key={cat.id}
-                style={styles.catItem}
-                onPress={() => router.push({ pathname: '/quiz', params: { category: cat.id } })}
-              >
-                <View style={styles.catLeft}>
-                  <View style={styles.catIconWrap}>
-                    <Ionicons name={cat.icon as any} size={20} color={colors.dark} />
+          {isLoadingCategories ? (
+            <View style={styles.catalogLoading}>
+              <ActivityIndicator size="small" color={colors.primaryLight} />
+              <Text style={styles.catalogLoadingText}>Memuat bank soal dari Supabase...</Text>
+            </View>
+          ) : (
+            <View style={styles.categoryStack}>
+              {categories.map((cat) => (
+                <Pressable
+                  key={cat.id}
+                  style={styles.catItem}
+                  onPress={() => router.push({ pathname: '/quiz', params: { category: cat.id } })}
+                >
+                  <View style={styles.catLeft}>
+                    <View style={styles.catIconWrap}>
+                      <Ionicons name={cat.icon as any} size={20} color={colors.dark} />
+                    </View>
+                    <View>
+                      <Text style={styles.catTitle}>{cat.name}</Text>
+                      <Text style={styles.catDetail}>{cat.questionCount} soal latihan</Text>
+                    </View>
                   </View>
-                  <View>
-                    <Text style={styles.catTitle}>{cat.name}</Text>
-                    <Text style={styles.catDetail}>{cat.questionCount} soal latihan</Text>
-                  </View>
-                </View>
 
-                <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
-              </Pressable>
-            ))}
-          </View>
+                  <Ionicons name="chevron-forward" size={18} color={colors.textMuted} />
+                </Pressable>
+              ))}
+            </View>
+          )}
         </View>
 
         <View style={styles.footerNote}>
@@ -208,6 +270,31 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.textSecondary,
     marginTop: 2,
+  },
+  signOutBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    backgroundColor: colors.dangerSoft,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 8,
+  },
+  signOutBtnText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: colors.danger,
+  },
+  accountBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 12,
+  },
+  accountBadgeText: {
+    flex: 1,
+    fontSize: 12,
+    color: colors.textSecondary,
   },
   studentCard: {
     backgroundColor: colors.surface,
@@ -323,6 +410,20 @@ const styles = StyleSheet.create({
   },
   categoryStack: {
     gap: 8,
+  },
+  catalogLoading: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: colors.surface,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: colors.border,
+    padding: 16,
+  },
+  catalogLoadingText: {
+    fontSize: 13,
+    color: colors.textSecondary,
   },
   catItem: {
     flexDirection: 'row',

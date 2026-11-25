@@ -5,19 +5,20 @@ import {
   StyleSheet,
   FlatList,
   Pressable,
-  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useQuiz } from '../context/QuizContext';
-import { QuizResult } from '../types/quiz';
-import { calculateScore } from '../utils/scoring';
-import PrimaryButton from '../components/PrimaryButton';
-import { colors } from '../styles';
+import { useQuiz } from '../../context/QuizContext';
+import { QuizResult } from '../../types/quiz';
+import { calculateScore } from '../../utils/scoring';
+import PrimaryButton from '../../components/PrimaryButton';
+import { colors } from '../../styles';
+import { confirmAction } from '../../utils/dialog';
 
 export default function HistoryScreen() {
   const router = useRouter();
-  const { history, clearHistory } = useQuiz();
+  const { history, clearHistory, isSyncing } = useQuiz();
 
   const handleOpenDetail = (id: string) => {
     router.push({
@@ -27,18 +28,13 @@ export default function HistoryScreen() {
   };
 
   const handleClearHistory = () => {
-    Alert.alert(
-      'Hapus Riwayat',
-      'Hapus semua catatan pengerjaan kuis pada sesi ini?',
-      [
-        { text: 'Batal', style: 'cancel' },
-        {
-          text: 'Hapus',
-          style: 'destructive',
-          onPress: () => clearHistory(),
-        },
-      ]
-    );
+    confirmAction({
+      title: 'Hapus Riwayat',
+      message: 'Hapus semua catatan pengerjaan kuis pada sesi ini?',
+      confirmText: 'Hapus',
+      destructive: true,
+      onConfirm: () => clearHistory(),
+    });
   };
 
   const renderHistoryItem = ({ item }: { item: QuizResult }) => {
@@ -104,9 +100,17 @@ export default function HistoryScreen() {
             <View style={styles.headerRow}>
               <View>
                 <Text style={styles.title}>Riwayat Pengerjaan</Text>
-                <Text style={styles.subtitle}>
-                  Tersimpan {history.length} sesi tes
-                </Text>
+                <View style={styles.subtitleRow}>
+                  <Text style={styles.subtitle}>
+                    Tersimpan {history.length} sesi tes
+                  </Text>
+                  {isSyncing && (
+                    <>
+                      <ActivityIndicator size="small" color={colors.primaryLight} />
+                      <Text style={styles.syncText}>Menyinkronkan ke cloud...</Text>
+                    </>
+                  )}
+                </View>
               </View>
               <Pressable style={styles.clearBtn} onPress={handleClearHistory}>
                 <Ionicons name="trash-outline" size={18} color={colors.danger} />
@@ -159,6 +163,16 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: colors.textSecondary,
     marginTop: 2,
+  },
+  subtitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
+  syncText: {
+    fontSize: 11,
+    color: colors.primaryLight,
+    fontWeight: '500',
   },
   clearBtn: {
     width: 38,

@@ -7,10 +7,10 @@ import {
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { useQuiz } from '../context/QuizContext';
-import { calculateScore, MINDORAIQ_DISCLAIMER } from '../utils/scoring';
-import PrimaryButton from '../components/PrimaryButton';
-import { colors } from '../styles';
+import { useQuiz } from '../../context/QuizContext';
+import { calculateScore, MINDORAIQ_DISCLAIMER } from '../../utils/scoring';
+import PrimaryButton from '../../components/PrimaryButton';
+import { colors } from '../../styles';
 
 export default function ResultScreen() {
   const router = useRouter();

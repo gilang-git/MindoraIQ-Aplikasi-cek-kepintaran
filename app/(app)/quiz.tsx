@@ -4,22 +4,22 @@ import {
   Text,
   StyleSheet,
   ScrollView,
-  Alert,
 } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { QUESTIONS_DATA, CATEGORIES } from '../data/questions';
-import { Question, QuizResult } from '../types/quiz';
-import { useQuiz } from '../context/QuizContext';
+import { getCategories, getQuestions } from '../../database/questionBank';
+import { CategoryItem, Question, QuizResult } from '../../types/quiz';
+import { useQuiz } from '../../context/QuizContext';
 import {
   calculateScore,
   formatQuizDate,
   generateResultId,
-} from '../utils/scoring';
-import ProgressBar from '../components/ProgressBar';
-import QuestionCard from '../components/QuestionCard';
-import PrimaryButton from '../components/PrimaryButton';
-import { colors } from '../styles';
+} from '../../utils/scoring';
+import ProgressBar from '../../components/ProgressBar';
+import QuestionCard from '../../components/QuestionCard';
+import PrimaryButton from '../../components/PrimaryButton';
+import { colors } from '../../styles';
+import { confirmAction } from '../../utils/dialog';
 
 export default function QuizScreen() {
   const router = useRouter();
@@ -27,35 +27,51 @@ export default function QuizScreen() {
   const { addResult, userName } = useQuiz();
 
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [userAnswers, setUserAnswers] = useState<(number | null)[]>([]);
   const [validationWarning, setValidationWarning] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [isLoadingQuestions, setIsLoadingQuestions] = useState<boolean>(true);
 
   useEffect(() => {
-    let filtered: Question[] = [];
-    const targetCategory = params.category;
+    let isActive = true;
 
-    if (!targetCategory || targetCategory === 'all') {
-      filtered = QUESTIONS_DATA;
-    } else {
-      filtered = QUESTIONS_DATA.filter((q) => q.category === targetCategory);
-    }
+    const loadQuestions = async () => {
+      setIsLoadingQuestions(true);
+      try {
+        const targetCategory = params.category;
+        const [allCategories, filtered] = await Promise.all([
+          getCategories(),
+          getQuestions(targetCategory),
+        ]);
 
-    if (filtered.length === 0) {
-      filtered = QUESTIONS_DATA;
-    }
+        const finalQuestions = filtered.length > 0 ? filtered : await getQuestions();
 
-    setQuestions(filtered);
-    setCurrentIndex(0);
-    setUserAnswers(new Array(filtered.length).fill(null));
-    setValidationWarning(null);
+        if (!isActive) return;
+        setCategories(allCategories);
+        setQuestions(finalQuestions);
+        setCurrentIndex(0);
+        setUserAnswers(new Array(finalQuestions.length).fill(null));
+        setValidationWarning(null);
+      } catch (error) {
+        console.warn('Gagal memuat soal dari Supabase:', error);
+      } finally {
+        if (isActive) setIsLoadingQuestions(false);
+      }
+    };
+
+    loadQuestions();
+
+    return () => {
+      isActive = false;
+    };
   }, [params.category]);
 
-  if (questions.length === 0) {
+  if (isLoadingQuestions || questions.length === 0) {
     return (
       <View style={styles.centerContainer}>
-        <Text style={styles.loadingText}>Memuat butir soal...</Text>
+        <Text style={styles.loadingText}>Memuat butir soal dari Supabase...</Text>
       </View>
     );
   }
@@ -64,7 +80,7 @@ export default function QuizScreen() {
   const selectedOption = userAnswers[currentIndex];
   const isLastQuestion = currentIndex === questions.length - 1;
 
-  const categoryInfo = CATEGORIES.find((c) => c.id === currentQuestion.category);
+  const categoryInfo = categories.find((c) => c.id === currentQuestion.category);
   const currentCategoryLabel =
     params.category === 'all'
       ? `Campuran: ${categoryInfo?.name || 'Kognitif'}`
@@ -104,17 +120,13 @@ export default function QuizScreen() {
       return;
     }
 
-    Alert.alert(
-      'Konfirmasi Selesai Tes',
-      'Apakah Anda yakin ingin menyelesaikan seluruh soal dan melihat hasil evaluasi skor?',
-      [
-        { text: 'Periksa Kembali', style: 'cancel' },
-        {
-          text: 'Ya, Selesaikan',
-          onPress: () => processFinishQuiz(),
-        },
-      ]
-    );
+    confirmAction({
+      title: 'Konfirmasi Selesai Tes',
+      message: 'Apakah Anda yakin ingin menyelesaikan seluruh soal dan melihat hasil evaluasi skor?',
+      confirmText: 'Ya, Selesaikan',
+      cancelText: 'Periksa Kembali',
+      onConfirm: () => processFinishQuiz(),
+    });
   };
 
   const processFinishQuiz = async () => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -6,13 +6,15 @@ import {
   ScrollView,
   Pressable,
   Modal,
+  ActivityIndicator,
 } from 'react-native';
 import { useRouter, useLocalSearchParams } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { CATEGORIES } from '../data/questions';
-import { colors } from '../styles';
-import { useQuiz } from '../context/QuizContext';
-import PrimaryButton from '../components/PrimaryButton';
+import { getCategories, getTotalQuestionCount } from '../../database/questionBank';
+import { CategoryItem } from '../../types/quiz';
+import { colors } from '../../styles';
+import { useQuiz } from '../../context/QuizContext';
+import PrimaryButton from '../../components/PrimaryButton';
 
 interface ConfirmationData {
   id: string;
@@ -26,37 +28,77 @@ export default function CategoryScreen() {
   const params = useLocalSearchParams<{ open?: string }>();
   const { userName } = useQuiz();
   const [selectedCategory, setSelectedCategory] = useState<ConfirmationData | null>(null);
+  const [categories, setCategories] = useState<CategoryItem[]>([]);
+  const [totalQuestions, setTotalQuestions] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
-  React.useEffect(() => {
-    if (params.open) {
+  const handleOpenConfirm = useCallback(
+    (categoryId: string) => {
+      const cat = categories.find((c) => c.id === categoryId);
+      if (cat) {
+        setSelectedCategory({
+          id: cat.id,
+          name: cat.name,
+          count: cat.questionCount,
+          description: cat.description,
+        });
+      }
+    },
+    [categories]
+  );
+
+  const handleOpenConfirmAll = useCallback(() => {
+    setSelectedCategory({
+      id: 'all',
+      name: 'Semua Materi (Campuran)',
+      count: totalQuestions,
+      description: 'Mencakup gabungan soal Logika, Pola Angka, Penalaran Verbal, dan Pola Gambar sekaligus.',
+    });
+  }, [totalQuestions]);
+
+  useEffect(() => {
+    let isActive = true;
+
+    (async () => {
+      try {
+        const [loadedCategories, count] = await Promise.all([
+          getCategories(),
+          getTotalQuestionCount(),
+        ]);
+        if (!isActive) return;
+        setCategories(loadedCategories);
+        setTotalQuestions(count);
+      } catch (error) {
+        console.warn('Gagal memuat bank soal dari Supabase:', error);
+      } finally {
+        if (isActive) setIsLoading(false);
+      }
+    })();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isLoading || !params.open) return undefined;
+
+    let isActive = true;
+
+    // Membuka modal konfirmasi berdasarkan parameter route (?open=...) dari deep link.
+    if (isActive) {
       if (params.open === 'all') {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- sinkronisasi dari navigation param, bukan derived state biasa
         handleOpenConfirmAll();
       } else {
         handleOpenConfirm(params.open);
       }
     }
-  }, [params.open]);
 
-  const handleOpenConfirm = (categoryId: string) => {
-    const cat = CATEGORIES.find((c) => c.id === categoryId);
-    if (cat) {
-      setSelectedCategory({
-        id: cat.id,
-        name: cat.name,
-        count: cat.questionCount,
-        description: cat.description,
-      });
-    }
-  };
-
-  const handleOpenConfirmAll = () => {
-    setSelectedCategory({
-      id: 'all',
-      name: 'Semua Materi (Campuran)',
-      count: 20,
-      description: 'Mencakup gabungan soal Logika, Pola Angka, Penalaran Verbal, dan Pola Gambar sekaligus.',
-    });
-  };
+    return () => {
+      isActive = false;
+    };
+  }, [params.open, isLoading, handleOpenConfirm, handleOpenConfirmAll]);
 
   const handleStartQuiz = () => {
     if (!selectedCategory) return;
@@ -91,7 +133,7 @@ export default function CategoryScreen() {
             <View style={styles.allTag}>
               <Text style={styles.allTagText}>Latihan Lengkap</Text>
             </View>
-            <Text style={styles.allBadge}>20 Butir Soal</Text>
+            <Text style={styles.allBadge}>{totalQuestions} Butir Soal</Text>
           </View>
 
           <Text style={styles.allTitle}>Semua Materi (Campuran)</Text>
@@ -111,32 +153,39 @@ export default function CategoryScreen() {
           <View style={styles.line} />
         </View>
 
-        <View style={styles.categoryStack}>
-          {CATEGORIES.map((cat) => (
-            <Pressable
-              key={cat.id}
-              style={styles.card}
-              onPress={() => handleOpenConfirm(cat.id)}
-            >
-              <View style={styles.cardHeader}>
-                <View style={styles.iconBox}>
-                  <Ionicons name={cat.icon as any} size={20} color={colors.primaryLight} />
+        {isLoading ? (
+          <View style={styles.loadingBox}>
+            <ActivityIndicator size="small" color={colors.primaryLight} />
+            <Text style={styles.loadingText}>Memuat bank soal dari Supabase...</Text>
+          </View>
+        ) : (
+          <View style={styles.categoryStack}>
+            {categories.map((cat) => (
+              <Pressable
+                key={cat.id}
+                style={styles.card}
+                onPress={() => handleOpenConfirm(cat.id)}
+              >
+                <View style={styles.cardHeader}>
+                  <View style={styles.iconBox}>
+                    <Ionicons name={cat.icon as any} size={20} color={colors.primaryLight} />
+                  </View>
+                  <View style={styles.countTag}>
+                    <Text style={styles.countTagText}>{cat.questionCount} Soal</Text>
+                  </View>
                 </View>
-                <View style={styles.countTag}>
-                  <Text style={styles.countTagText}>{cat.questionCount} Soal</Text>
+
+                <Text style={styles.title}>{cat.name}</Text>
+                <Text style={styles.desc}>{cat.description}</Text>
+
+                <View style={styles.cardAction}>
+                  <Text style={styles.actionText}>Buka Soal</Text>
+                  <Ionicons name="chevron-forward" size={16} color={colors.primaryLight} />
                 </View>
-              </View>
-
-              <Text style={styles.title}>{cat.name}</Text>
-              <Text style={styles.desc}>{cat.description}</Text>
-
-              <View style={styles.cardAction}>
-                <Text style={styles.actionText}>Buka Soal</Text>
-                <Ionicons name="chevron-forward" size={16} color={colors.primaryLight} />
-              </View>
-            </Pressable>
-          ))}
-        </View>
+              </Pressable>
+            ))}
+          </View>
+        )}
       </ScrollView>
 
       {selectedCategory && (
@@ -311,6 +360,20 @@ const styles = StyleSheet.create({
   },
   categoryStack: {
     gap: 12,
+  },
+  loadingBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: colors.surface,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.borderStrong,
+    padding: 16,
+  },
+  loadingText: {
+    fontSize: 13,
+    color: colors.textSecondary,
   },
   card: {
     backgroundColor: colors.surface,
